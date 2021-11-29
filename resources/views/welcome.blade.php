@@ -20,7 +20,7 @@
                         @csrf
                         <label>Create your note</label>
                         <div class="input-group mb-3">
-                            <textarea rows="5" name="note" class="" placeholder="" id=""></textarea>
+                            <textarea rows="4" name="note" class="" placeholder="" id=""></textarea>
                         </div>
                         <label class="">Create an optional password</label>
                         <p class="text-muted npm">Leave blank if you do not require password protection</p>
@@ -28,7 +28,7 @@
                             <input type="text" name="password" class="" placeholder="" value="" id="">
                         </div>
                         <div class="input-group mb-3">
-                            <input type="submit" name="" class="btn btn-dark" placeholder="" value="Get Link" id="">
+                            <input type="submit" name="" class="btn btn-dark py-3" placeholder="" value="Get Link" id="">
                         </div>
                     </form>
                 </div>
