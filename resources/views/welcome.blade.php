@@ -28,7 +28,7 @@
                             <input type="text" name="password" class="" placeholder="" value="" id="">
                         </div>
                         <div class="input-group mb-3">
-                            <input type="submit" name="" class="btn btn-dark" placeholder="" value="Save" id="">
+                            <input type="submit" name="" class="btn btn-dark" placeholder="" value="Get Link" id="">
                         </div>
                     </form>
                 </div>
