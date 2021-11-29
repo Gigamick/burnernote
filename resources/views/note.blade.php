@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="col-12 col-md-8 offset-md-2">
                     <div class="card p-4">
-                        <p class="link npm ">{{$note->note}}</p>
+                        <p class="npm ">{{$actualnote}}</p>
                     </div>
                 </div>
             </div>

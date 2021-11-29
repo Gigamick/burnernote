@@ -26,6 +26,9 @@
                         </div>
 
                     </form>
+                    @if(session('success'))
+                        <p>Wrong Password</p>
+                    @endif
                 </div>
             </div>
         </div>
