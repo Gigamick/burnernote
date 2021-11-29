@@ -5,7 +5,7 @@
     <script>
         new ClipboardJS('.copy');
     </script>
-    <section class="hero">
+    <section class="hero mt-4">
         <div class="container">
             <div class="row">
                 <div class="col-12 col-md-8 offset-md-2">
@@ -14,7 +14,7 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-8 offset-md-2 text-center">
-                    <p class="text-muted mt-2 copy-note">Click link to copy it</p>
+                    <p class="text-muted mt-2 copy-note">Click on the link to copy it</p>
                     <p class="text-muted mt-2 copy-success font-red font-weight-bold" style="display: none">Copied</p>
                 </div>
             </div>
