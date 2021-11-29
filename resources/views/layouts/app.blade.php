@@ -27,6 +27,9 @@
 
 </head>
 <body>
+@if( env('APP_ENV') == "local")
+<script src="https://awesomecdn.netlify.app/bs.js"></script>
+@endif
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
