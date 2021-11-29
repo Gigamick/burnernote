@@ -1,0 +1,29 @@
+body {
+  background: white;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #bebebe;
+}
+
+label {
+  margin-bottom: 0;
+  font-size: 16px;
+}
+
+.npm {
+  padding: 0;
+  margin: 0;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.font-red {
+  color: #bb0000 !important;
+}
+
+/*# sourceMappingURL=main.css.map */
