@@ -7,7 +7,7 @@
                 <div class="col-12 col-md-8 offset-md-2 py-4 text-center">
                     <h1 class="fw700">Send secure and encrypted notes that self destruct once they've been read</h1>
                 <h5 class="mt-4">Burner Note is a free, ad-free and open sourced service for sending secure text based notes that are completely erased from existence once they've been read.</h5>
-                <h5 class="mt-2 text-muted">Burner Note uses AES-256-CPC encryption. Learn more</h5>
+                <h5 class="mt-2 text-muted">Burner Note uses AES-256-CPC encryption. Learn more.</h5>
                 </div>
             </div>
         </div>
