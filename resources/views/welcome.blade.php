@@ -4,8 +4,10 @@
     <section class="hero">
         <div class="container">
             <div class="row">
-                <div class="col-12">
-
+                <div class="col-12 col-md-8 offset-md-2 py-5 text-center">
+                    <h1 class="fw700">Send secure and encrypted notes that self destruct once they've been read</h1>
+                <h5 class="mt-4">Burner Note is a free and open sourced service for sending secure text based notes that are completely erased from existence once they've been read.</h5>
+                <h5 class="mt-2 text-muted">We use AES-256-CPC encryption. Read more about that here.</h5>
                 </div>
             </div>
         </div>
