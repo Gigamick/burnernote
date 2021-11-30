@@ -18,7 +18,7 @@
                         @csrf
                         <label class="">Enter Password</label>
                         <div class="input-group mb-3">
-                            <input type="text" name="password" class="" placeholder="" value="" id="">
+                            <input type="password" name="password" class="" placeholder="" value="" id="">
                         </div>
                         <input type="hidden" name="token" class="" placeholder="" value="{{$token}}" id="">
                         <div class="input-group mb-3">
