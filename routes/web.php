@@ -23,4 +23,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::post('/create-note', [App\Http\Controllers\NoteController::class, 'create']);
 Route::post('/submit-password', [App\Http\Controllers\NoteController::class, 'password']);
 Route::get('/n/{token}', [App\Http\Controllers\NoteController::class, 'show']);
+Route::view('/about', 'about');
+Route::view('/faq', 'faq');
 
