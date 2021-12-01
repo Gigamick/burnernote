@@ -8,7 +8,7 @@
                 <div class="col-12 col-md-8 offset-md-2">
                     <h2 class="text-muted mt-2 copy-note">Contact</h2>
                     <h4 class="my-3">We'd love to hear from you. Use the form below to say hi.</h4>
-                    <form class=" mt-5" method="POST" action="https://formspree.io/f/mjvlbpzk">
+                    <form class=" mt-5" method="POST" action="https://submit-form.com/coj4IR32">
                     @csrf
                         <label>Your Email</label>
                         <div class="input-group mb-3">
