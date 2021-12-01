@@ -25,4 +25,5 @@ Route::post('/submit-password', [App\Http\Controllers\NoteController::class, 'pa
 Route::get('/n/{token}', [App\Http\Controllers\NoteController::class, 'show']);
 Route::view('/about', 'about');
 Route::view('/faq', 'faq');
+Route::view('/contact', 'contact');
 
