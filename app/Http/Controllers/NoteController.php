@@ -20,7 +20,8 @@ class NoteController extends Controller
         }
 
         $note = new Note();
-        $note->note = Crypt::encryptString($request->note);
+        $sanitizednote = strip_tags($request->note);
+        $note->note = Crypt::encryptString($sanitizednote);
         if ($request->password) {
             $note->password = Hash::make($request->password);
         } else {
