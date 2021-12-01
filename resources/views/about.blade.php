@@ -13,7 +13,7 @@
                             <li>We delete it from our
                                 database once its been read
                             </li>
-                            <li>You can verify this yourself because Burner Note is open source</li>
+                            <li>You can verify this yourself because Burner Note is <a href="https://github.com/GigaMick/burnernote" target="_blank">open source</a></li>
                         </ul>
                     </h4>
                     <hr>
@@ -22,7 +22,7 @@
                         sure if they really are actually encrypting / deleting anything.</h4>
                     <h4 class="mt-3"> As a developer I wanted to build something better; something more useable and
                         technically transparent, and that's what Burner Note is.</h4>
-                    <h4 class="mt-3">The good stuff... Burner Note is open source. Go and check out the code. If you
+                    <h4 class="mt-3">The good stuff... Burner Note is <a href="https://github.com/GigaMick/burnernote" target="_blank">open source</a>. Go and check out the code. If you
                         can't be bothered doing that then I can tell you that from browser to server we are relying on good old
                         SSL. On the back end we utilise <a href="https://laravel.com/docs/8.x/encryption"
                                                            target="_blank">Laravel's out of the box encryption
