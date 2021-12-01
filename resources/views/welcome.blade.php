@@ -20,7 +20,7 @@
                         @csrf
                         <label>Create your note</label>
                         <div class="input-group mb-3">
-                            <textarea rows="4" name="note" class="" placeholder="" id=""></textarea>
+                            <textarea rows="4" name="note" class="" placeholder="" id="" required></textarea>
                         </div>
                         <label class="">Create an optional password</label>
                         <p class="text-muted npm">Leave blank if you do not require password protection</p>
