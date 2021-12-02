@@ -4,10 +4,17 @@
     <section class="hero">
         <div class="container">
             <div class="row">
-                <div class="col-12 col-lg-10 offset-lg-1 col-xl-8 offset-xl-2 py-4 text-center">
+                <div class="col-12 col-lg-10 offset-lg-1 col-xl-8 offset-xl-2 pt-4 text-center">
                     <h1 class="fw700">Send secure and encrypted notes that self destruct once they've been read</h1>
-                <h5 class="mt-4">Burner Note is a free, ad-free and open sourced service for sending secure text based notes that are completely erased from existence once they've been read.</h5>
-                    <h5 class="mt-2 text-muted">Utilising AES-256-CBC encryption signed with a MAC. <a href="/about">Learn more</a>.</h5>
+                    <h5 class="mt-4">Burner Note is a free, ad-free and open sourced service for sending secure text
+                        based notes that are completely erased from existence once they've been read.</h5>
+                    <div class="row">
+                        <div class="col-12">
+                            <p class="mt-2 text-muted">Utilising AES-256-CBC encryption signed with a message authentication
+                                code (MAC). <a href="/about">Learn more</a>.</p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -28,7 +35,8 @@
                             <input type="text" name="password" class="" placeholder="" value="" id="">
                         </div>
                         <div class="input-group mb-3">
-                            <input type="submit" name="" class="btn btn-dark py-3" placeholder="" value="Get Link" id="">
+                            <input type="submit" name="" class="btn btn-dark py-3" placeholder="" value="Get Link"
+                                   id="">
                         </div>
                     </form>
                 </div>
