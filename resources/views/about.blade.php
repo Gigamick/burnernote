@@ -10,6 +10,7 @@
                     <h4 class="mt-3 font-italic text-muted">TL;DR
                         <ul class="mt-3">
                             <li>We encrypt your note using an AES-256-CBC cipher</li>
+                            <li>We "<a href="https://crypto.stackexchange.com/questions/202/should-we-mac-then-encrypt-or-encrypt-then-mac" target="_blank">Encrypt-then-MAC"</a></li>
                             <li>We delete it from our
                                 database once its been read
                             </li>
