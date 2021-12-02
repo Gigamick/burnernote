@@ -10,7 +10,7 @@
             <div class="row">
                 <div class="col-12 col-md-8 offset-md-2">
                     <div data-clipboard-target=".link"  class="card copy pointer p-4 d-flex justify-content-center align-items-center">
-                        <p class="link npm ">{{env('APP_URL')}}/n/{{$note->token}}</p>
+                        <p class="link npm ">{{env('APP_URL')}}/v/{{$note->token}}</p>
                     </div>
                 </div>
                 <div class="col-12 col-md-8 offset-md-2 text-center">
