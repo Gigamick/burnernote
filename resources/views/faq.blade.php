@@ -16,6 +16,10 @@
                     <hr>
                     <h4 class="mt-3 fw700">Why are you open source?</h4>
                     <h4>To promote trust; so that people can see we do what we say we do.</h4>
+                    <hr>
+                    <h4 class="mt-3 fw700">How do I know the linked repo is really what is deployed?</h4>
+                    <h4>I actually don't know how to prove that. It is a problem for any OSS I imagine. However I
+                        promise you it is.</h4>
                 </div>
             </div>
         </div>
