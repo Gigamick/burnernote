@@ -20,14 +20,14 @@
     <meta property="og:url" content="https://burnernote.com/">
     <meta property="og:title" content="Burner Note">
     <meta property="og:description" content="Send secure and encrypted notes that self destruct once they've been read">
-    <meta property="og:image" content="">
+    <meta property="og:image" content="https://burnernote.com/img/burnernote.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://burnernote.com/">
     <meta property="twitter:title" content="Burner Note">
     <meta property="twitter:description" content="Send secure and encrypted notes that self destruct once they've been read">
-    <meta property="twitter:image" content="">
+    <meta property="twitter:image" content="https://burnernote.com/img/burnernote.png">
 
     <!-- Scripts -->
     <script src="{{ secure_asset('js/app.js') }}" defer></script>
