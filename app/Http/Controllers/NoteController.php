@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Mockery\Matcher\Not;
 use Psr\Log\NullLogger;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Redis;
 
 class NoteController extends Controller
 {
@@ -32,6 +33,11 @@ class NoteController extends Controller
         $note->save();
 
         return view('note-summary', compact('note'));
+    }
+
+    public function verify($token)
+    {
+        return view('disclaimer', compact('token'));
     }
 
     public function show($token)
@@ -64,7 +70,7 @@ class NoteController extends Controller
         $password = $passwordcheck->password;
         $verifypasswordtrue = Hash::check($request->password, $passwordcheck->password);
 
-        if(! $verifypasswordtrue) {
+        if (!$verifypasswordtrue) {
             return back()->with('success', 'Incorrect password');
         }
 

@@ -11,7 +11,8 @@
         "laravel/framework": "^8.65",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
-        "laravel/ui": "^3.3"
+        "laravel/ui": "^3.3",
+        "potelo/laravel-block-bots": "^1.1"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
