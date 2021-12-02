@@ -10,7 +10,24 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <!-- Primary Meta Tags -->
+    <title>Burner Note</title>
+    <meta name="title" content="Burner Note">
+    <meta name="description" content="Send secure and encrypted notes that self destruct once they've been read">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://burnernote.com/">
+    <meta property="og:title" content="Burner Note">
+    <meta property="og:description" content="Send secure and encrypted notes that self destruct once they've been read">
+    <meta property="og:image" content="">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://burnernote.com/">
+    <meta property="twitter:title" content="Burner Note">
+    <meta property="twitter:description" content="Send secure and encrypted notes that self destruct once they've been read">
+    <meta property="twitter:image" content="">
 
     <!-- Scripts -->
     <script src="{{ secure_asset('js/app.js') }}" defer></script>
