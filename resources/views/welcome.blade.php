@@ -11,7 +11,7 @@
                     <div class="row">
                         <div class="col-12">
                             <p class="mt-0 text-muted">Utilising AES-256-CBC encryption signed with a message authentication
-                                code (MAC). <a href="/about">Learn more</a>.</p>
+                                code (MAC).</p>
                         </div>
                     </div>
 
