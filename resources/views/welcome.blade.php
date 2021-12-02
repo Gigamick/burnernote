@@ -10,7 +10,7 @@
                         based notes that are completely erased from existence once they've been read.</h5>
                     <div class="row">
                         <div class="col-12">
-                            <p class="mt-2 text-muted">Utilising AES-256-CBC encryption signed with a message authentication
+                            <p class="mt-0 text-muted">Utilising AES-256-CBC encryption signed with a message authentication
                                 code (MAC). <a href="/about">Learn more</a>.</p>
                         </div>
                     </div>
