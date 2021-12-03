@@ -14,7 +14,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-12 col-md-8 offset-md-2">
-                    <form class="" method="post" action="/submit-password">
+                    <form class="" method="post" action="{{secure_url('/submit-password')}} ">
                         @csrf
                         <label class="">Enter Password</label>
                         <div class="input-group mb-3">
