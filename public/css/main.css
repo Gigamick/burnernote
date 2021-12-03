@@ -1,3 +1,39 @@
+/* montserrat-regular - latin */
+@font-face {
+  font-family: "Quicksand";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local("Quicksand Regular"), local("Quicksand-Regular"), url("../fonts/Quicksand-VariableFont_wght.ttf") format("truetype");
+  /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* montserrat-italic - latin */
+@font-face {
+  font-family: "Quicksand";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local("Quicksand Italic"), local("Quicksand-Italic"), url("../fonts/Quicksand-VariableFont_wght.ttf") format("truetype");
+  /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* montserrat-700 - latin */
+@font-face {
+  font-family: "Quicksand";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local("Quicksand Bold"), local("Quicksand-Bold"), url("../fonts/Quicksand-VariableFont_wght.ttf") format("truetype");
+  /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* montserrat-700italic - latin */
+@font-face {
+  font-family: "Quicksand";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: local("Quicksand Bold Italic"), local("Quicksand-BoldItalic"), url("../fonts/Quicksand-VariableFont_wght.ttf") format("truetype");
+  /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
 body {
   background: white;
 }
