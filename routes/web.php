@@ -27,4 +27,7 @@ Route::get('/v/{token}', [App\Http\Controllers\NoteController::class, 'verify'])
 Route::view('/about', 'about');
 Route::view('/faq', 'faq');
 Route::view('/contact', 'contact');
+Route::post('/send-sms', [App\Http\Controllers\EmailController::class, 'sendsms']);
+Route::post('/send-email', [App\Http\Controllers\EmailController::class, 'sendemail']);
+
 
