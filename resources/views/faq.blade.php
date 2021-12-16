@@ -20,6 +20,14 @@
                     <h4 class="mt-3 fw700">How do I know the linked repo is really what is deployed?</h4>
                     <h4>I actually don't know how to prove that. It is a problem for any OSS I imagine. However I
                         promise you it is.</h4>
+                    <hr>
+                    <h4 class="mt-3 fw700">How can I stop someone taking a screen shot?</h4>
+                    <h4>In short, you can't. Taking screenshots is a function of the operating system and can't be
+                        blocked or overridden by a website.</h4>
+                    <h4>Further to that, even if it was possible there is no way to stop someone simply taking a
+                        photograph of the screen. Or, even more simply writing out your note on paper. To that end Burner
+                        Note and similar products make no effort to stop screenshots or copy / pasting. If the person
+                        you're sending a note to wants to keep it bad enough then they will. One way or another.</h4>
                 </div>
             </div>
         </div>
