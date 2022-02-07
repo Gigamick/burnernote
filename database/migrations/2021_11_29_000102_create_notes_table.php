@@ -20,7 +20,7 @@ class CreateNotesTable extends Migration
             $table->text('note');
             $table->string('password')->nullable();
             $table->string('token');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id');
 
         });
     }
