@@ -19,7 +19,7 @@ class CreateNotesTable extends Migration
             $table->bigInteger('user_id')->nullable();
             $table->text('note');
             $table->string('password')->nullable();
-            $table->string('token');
+            $table->string('token'); //comment
 
         });
     }
