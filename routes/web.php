@@ -19,6 +19,8 @@ Route::get('/', function () {
 
 Auth::routes();
 
+//
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::post('/create-note', [App\Http\Controllers\NoteController::class, 'create']);
 Route::post('/submit-password', [App\Http\Controllers\NoteController::class, 'password']);
