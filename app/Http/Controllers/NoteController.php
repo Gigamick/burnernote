@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -20,6 +21,8 @@ class NoteController extends Controller
             $user = Auth::user();
         }
 
+        $expiry = $request->expiry ?? 7;
+
         $note = new Note();
         $sanitizednote = strip_tags($request->note);
         $note->note = Crypt::encryptString($sanitizednote);
@@ -30,6 +33,7 @@ class NoteController extends Controller
         }
         $note->user_id = $user->id ?? null;
         $note->token = Str::uuid();
+        $note->expiry_date = Carbon::now()->addDays($expiry);
         $note->save();
 
         return view('note-summary', compact('note'));
@@ -46,6 +50,16 @@ class NoteController extends Controller
 
         if (!$note) {
             return view('deleted-note');
+        }
+
+        if ($note->expiry_date < Carbon::now()) {
+            $note->note = "";
+            $note->token = "";
+            $note->password = "";
+            $note->save();
+
+            return view('expired-note');
+
         }
 
         if ($note->password != null) {
