@@ -34,7 +34,7 @@ class ViewNoteTest extends TestCase
 
         $response->assertOk();
         $response->assertViewIs('deleted-note');
-        $response->assertSeeText("The note you're trying to access has expired", false);
+        $response->assertSeeText("The note you're trying to access has expired", $escaped = false);
     }
 
     /** @test */
@@ -53,7 +53,7 @@ class ViewNoteTest extends TestCase
             'note' => '',
         ], $difference = array_diff_assoc(Note::first()->toArray(), $expired_note));
         $response->assertViewIs('expired-note');
-        $response->assertSeeText("The note you're trying to access has expired", false);
+        $response->assertSeeText("The note you're trying to access has expired", $escaped = false);
     }
 
     /** @test */
