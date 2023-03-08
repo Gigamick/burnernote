@@ -59,14 +59,14 @@ class ViewNoteTest extends TestCase
     /** @test */
     function trying_to_access_note_with_passward_asks_for_password() {
         $note = Note::factory()->create([
-            'password' => 'secret',
+            'password' => Hash::make('secret'),
         ]);
 
         $response = $this->get("/n/{$note->token}");
 
         $response->assertOk();
         $response->assertViewIs('enter-password');
-        $response->assertViewHas('token');
+        $response->assertViewHas('token', $note->token);
     }
 
     /** @test */
@@ -116,10 +116,11 @@ class ViewNoteTest extends TestCase
             'password' => 'secret',
         ]);
 
-        $this->assertEquals(null, $note->fresh()->password);
         $response->assertOk();
         $response->assertViewIs('note');
         $response->assertViewHas('note');
         $response->assertViewHasAll(['actualnote' => $message]);
+        $attributes = $note->fresh()->pluck('password', 'note', 'token');
+        $this->assertEmpty(array_filter($attributes->toArray()));
     }
 }
