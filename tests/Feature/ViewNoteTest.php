@@ -97,7 +97,7 @@ class ViewNoteTest extends TestCase
 
         $response = $this->from("/n/{$note->token}")->post('/submit-password', [
             'password' => 'wrong-password',
-            'token' => $note->token,
+            'token'    => $note->token,
         ]);
 
         $response->assertRedirect("/n/{$note->token}");
@@ -112,7 +112,7 @@ class ViewNoteTest extends TestCase
         ]);
 
         $response = $this->followingRedirects()->post('/submit-password', [
-            'token' => $note->token,
+            'token'    => $note->token,
             'password' => 'secret',
         ]);
 
