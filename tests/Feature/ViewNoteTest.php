@@ -72,7 +72,7 @@ class ViewNoteTest extends TestCase
     /** @test */
     function notes_without_password_can_be_viewed_and_are_removed() {
         $note = Note::factory()->create([
-            'note'     => encrypt($message = 'My secret message!'),
+            'note'     => encrypt($message = 'My secret message!', $serialize = false),
             'password' => null,
         ])->toArray();
 
@@ -85,8 +85,8 @@ class ViewNoteTest extends TestCase
             'note' => '',
         ], $difference = array_diff_assoc(Note::first()->toArray(), $note));
         $response->assertViewIs('note');
-        $response->assertViewHasAll(['note', 'actualnote']);
-        $response->assertViewHas($message, false);
+        $response->assertViewHas('note');
+        $response->assertViewHasAll(['actualnote' => $message]);
     }
 
     /** @test */
@@ -107,7 +107,7 @@ class ViewNoteTest extends TestCase
     /** @test */
     function notes_with_password_can_be_viewed() {
         $note = Note::factory()->create([
-            'note'     => encrypt($message = 'secret message!'),
+            'note'     => encrypt($message = 'secret message!', $serialize = false),
             'password' => Hash::make('secret'),
         ]);
 
@@ -119,7 +119,7 @@ class ViewNoteTest extends TestCase
         $this->assertEquals(null, $note->fresh()->password);
         $response->assertOk();
         $response->assertViewIs('note');
-        $response->assertViewHasAll(['note', 'actualnote']);
-        $response->assertViewHas($message, false);
+        $response->assertViewHas('note');
+        $response->assertViewHasAll(['actualnote' => $message]);
     }
 }
