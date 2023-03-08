@@ -15,7 +15,7 @@ class NoteFactory extends Factory
     public function definition()
     {
         return [
-            'note'          => encrypt('secret message'),
+            'note'          => encrypt('secret message', $serialize = false),
             'password'      => Hash::make('secret'),
             'expiry_date'   => now()->addDays(7),
             'token'         => 'token',
