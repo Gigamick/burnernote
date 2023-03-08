@@ -14,7 +14,7 @@ class CreateNoteTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    function user_can_create_an_encrypted_with_password_note() {
+    function user_can_create_an_encrypted_note_with_password() {
         $message = 'Secret Message!';
         $defaultExpiry = 7;
 
