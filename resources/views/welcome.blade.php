@@ -37,7 +37,7 @@
                         <label class="">Days till auto self destruct</label>
                         <p class="text-muted npm">The note will expire after a set number of days</p>
                         <div class="input-group mb-3">
-                            <input type="number" name="expiry" class="" placeholder="" value="7" id="">
+                            <input type="number" min="1" name="expiry" class="" placeholder="" value="7" id="">
                         </div>
                         <div class="input-group mb-3">
                             <input type="submit" name="" class="btn btn-dark py-3" placeholder="" value="Get Link"
