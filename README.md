@@ -1,4 +1,4 @@
-## About Burnernote
+## Burnernote App
 
 **[Burnernote](https://burnernote.com)** Send secure and encrypted notes that self destruct once they've been read. It is designed to be:
 
