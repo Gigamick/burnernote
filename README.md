@@ -62,7 +62,7 @@ valet link
 valet secure
 ```
 
-- visit `https://burnernote.test` in the browser
+- visit 'https://burnernote.test' in the browser
 
 
 ## Security Vulnerabilities
