@@ -11,7 +11,7 @@
 * **Auto self destruct.** The note will expire after a set number of days, **default to 7 days**
 
 
-### :zap: Installation using (laravel\valet)[https://laravel.com/docs/10.x/valet]
+### :zap: Installation using [laravel\valet](https://laravel.com/docs/10.x/valet)
 
 - Clone the repository.
 ```bash
