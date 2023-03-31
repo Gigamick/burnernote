@@ -11,7 +11,7 @@
 * **Auto self destruct.** The note will expire after a set number of days, **default to 7 days**
 
 
-### :zap: Installation
+### :zap: Installation using (laravel\valet)[https://laravel.com/docs/10.x/valet]
 
 - Clone the repository.
 ```bash
@@ -23,14 +23,14 @@ git clone https://github.com/Gigamick/burnernote.git
 cd burnernote
 ```
 
-- Make sure `php is ^7.0`
+- Make sure `php is ^8.0`
 ```bash
 php -v
 ```
 
 - Install composer dependencies
 ```bash
-composer update
+composer install
 ```
 
 - Copy .env file 
@@ -39,6 +39,14 @@ cp .env.example .env
 ```
 
 - Edit database credentials in `.env file`
+```bash
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=burnernote
+DB_USERNAME=root
+DB_PASSWORD=root
+```
 
 - Edit app url to 'https://burnernote.test' since assets are served through secure url
 
