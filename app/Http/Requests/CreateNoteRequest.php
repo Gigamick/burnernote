@@ -17,6 +17,8 @@ class CreateNoteRequest extends FormRequest
             'note' => ['required', 'string', 'max:50000'],
             'password' => ['nullable', 'string', 'max:255'],
             'expiry' => ['nullable', 'integer', 'min:1', 'max:30'],
+            'max_views' => ['nullable', 'integer', 'min:1', 'max:10'],
+            'notify_email' => ['nullable', 'email', 'max:255'],
         ];
     }
 

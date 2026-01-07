@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateNoteRequest;
 use App\Models\Note;
+use App\Models\Receipt;
 use Carbon\Carbon;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
@@ -20,21 +21,47 @@ class NoteController extends Controller
     {
         $validated = $request->validated();
         $expiry = (int) ($validated['expiry'] ?? 7);
+        $expiryDate = Carbon::now()->addDays($expiry);
+        $clientEncrypted = $request->has('client_encrypted');
 
-        $note = Note::create([
-            'note' => Crypt::encryptString(strip_tags($validated['note'])),
-            'password' => isset($validated['password']) ? Hash::make($validated['password']) : null,
-            'user_id' => Auth::id(),
+        $receipt = Receipt::create([
             'token' => Str::uuid(),
-            'expiry_date' => Carbon::now()->addDays($expiry),
+            'status' => 'pending',
+            'notify_email' => $validated['notify_email'] ?? null,
+            'expires_at' => $expiryDate,
         ]);
 
-        return view('note-summary', compact('note'));
+        // For client-encrypted notes, the content is already encrypted client-side
+        // We still wrap with server-side encryption for at-rest security
+        $noteContent = $clientEncrypted
+            ? Crypt::encryptString($validated['note']) // Store client-encrypted blob, wrapped with server encryption
+            : Crypt::encryptString(strip_tags($validated['note'])); // Legacy: server encrypts plaintext
+
+        $note = Note::create([
+            'note' => $noteContent,
+            'password' => isset($validated['password']) ? Hash::make($validated['password']) : null,
+            'client_encrypted' => $clientEncrypted,
+            'max_views' => (int) ($validated['max_views'] ?? 1),
+            'user_id' => Auth::id(),
+            'token' => Str::uuid(),
+            'receipt_token' => $receipt->token,
+            'expiry_date' => $expiryDate,
+        ]);
+
+        return view('note-summary', compact('note', 'receipt'));
     }
 
     public function verify(string $token): View
     {
-        return view('disclaimer', compact('token'));
+        $note = Note::where('token', $token)->first();
+
+        if (!$note) {
+            return view('deleted-note');
+        }
+
+        $remainingViews = $note->remainingViews();
+
+        return view('disclaimer', compact('token', 'remainingViews'));
     }
 
     public function show(string $token): View
@@ -46,6 +73,7 @@ class NoteController extends Controller
         }
 
         if ($note->isExpired()) {
+            $this->markReceiptExpired($note);
             $note->delete();
             return view('expired-note');
         }
@@ -77,18 +105,71 @@ class NoteController extends Controller
         return $this->displayAndDeleteNote($note);
     }
 
+    public function receipt(string $token): View
+    {
+        $receipt = Receipt::where('token', $token)->first();
+
+        if (!$receipt) {
+            return view('receipt-not-found');
+        }
+
+        if ($receipt->status === 'pending' && $receipt->expires_at->isPast()) {
+            $receipt->markAsExpired();
+        }
+
+        return view('receipt', compact('receipt'));
+    }
+
     private function displayAndDeleteNote(Note $note): View
     {
         try {
-            $actualnote = Crypt::decryptString($note->note);
+            $decrypted = Crypt::decryptString($note->note);
         } catch (DecryptException $e) {
             Log::error('Failed to decrypt note', ['note_id' => $note->id]);
             $note->delete();
             return view('deleted-note');
         }
 
-        $note->delete();
+        // Increment view count
+        $note->incrementViewCount();
+        $remainingViews = $note->remainingViews();
+        $clientEncrypted = $note->client_encrypted;
 
-        return view('note', compact('actualnote'));
+        // Delete note if max views reached
+        if ($note->shouldBeDeleted()) {
+            $this->markReceiptViewed($note);
+            $note->delete();
+        }
+
+        if ($clientEncrypted) {
+            // For client-encrypted notes, pass the client-encrypted blob to view
+            // Client will decrypt with key from URL fragment
+            return view('note-encrypted', [
+                'encryptedNote' => $decrypted,
+                'remainingViews' => $remainingViews,
+            ]);
+        }
+
+        // Legacy: server-decrypted plaintext
+        return view('note', [
+            'actualnote' => $decrypted,
+            'remainingViews' => $remainingViews,
+        ]);
+    }
+
+    private function markReceiptViewed(Note $note): void
+    {
+        if ($note->receipt_token) {
+            $receipt = Receipt::where('token', $note->receipt_token)->first();
+            $receipt?->markAsViewed();
+        }
+    }
+
+    private function markReceiptExpired(Note $note): void
+    {
+        if ($note->receipt_token) {
+            $receipt = Receipt::where('token', $note->receipt_token)->first();
+            $receipt?->markAsExpired();
+        }
     }
 }

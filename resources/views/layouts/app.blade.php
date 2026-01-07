@@ -1,6 +1,13 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
     <script defer data-domain="burnernote.com" src="https://plausible.io/js/plausible.js"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,37 +31,57 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-50 font-sans antialiased">
+<body class="bg-gray-50 dark:bg-gray-900 font-sans antialiased transition-colors duration-200">
     <div id="app" class="min-h-screen flex flex-col">
         <!-- Navbar -->
-        <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-50 transition-colors duration-200">
             <div class="max-w-4xl mx-auto px-4 sm:px-6">
                 <div class="flex justify-between items-center h-16">
                     <!-- Logo -->
-                    <a href="{{ url('/') }}" class="text-xl font-bold text-gray-900 hover:text-gray-700 transition-colors">
+                    <a href="{{ url('/') }}" class="text-xl font-bold text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
                         Burner Note
                     </a>
 
                     <!-- Desktop Navigation -->
-                    <div class="hidden sm:flex items-center space-x-8">
-                        <a href="/about" class="text-gray-600 hover:text-gray-900 transition-colors">About</a>
-                        <a href="/faq" class="text-gray-600 hover:text-gray-900 transition-colors">FAQ</a>
-                        <a href="/contact" class="text-gray-600 hover:text-gray-900 transition-colors">Contact</a>
+                    <div class="hidden sm:flex items-center space-x-6">
+                        <a href="/about" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">About</a>
+
+                        <!-- Theme Toggle -->
+                        <button type="button" onclick="toggleTheme()" class="p-2 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                            <!-- Moon icon (shown in light mode) -->
+                            <svg class="w-5 h-5 block dark:hidden" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                            </svg>
+                            <!-- Sun icon (shown in dark mode) -->
+                            <svg class="w-5 h-5 hidden dark:block" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
                     </div>
 
-                    <!-- Mobile menu button -->
-                    <button type="button" class="sm:hidden p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-all" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                        </svg>
-                    </button>
+                    <!-- Mobile: Theme Toggle + Menu Button -->
+                    <div class="sm:hidden flex items-center space-x-2">
+                        <button type="button" onclick="toggleTheme()" class="p-2 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                            <!-- Moon icon (shown in light mode) -->
+                            <svg class="w-5 h-5 block dark:hidden" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                            </svg>
+                            <!-- Sun icon (shown in dark mode) -->
+                            <svg class="w-5 h-5 hidden dark:block" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                        <button type="button" class="p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-all" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Mobile Navigation -->
                 <div id="mobile-menu" class="hidden sm:hidden pb-4 space-y-2">
-                    <a href="/about" class="block px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-all">About</a>
-                    <a href="/faq" class="block px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-all">FAQ</a>
-                    <a href="/contact" class="block px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-all">Contact</a>
+                    <a href="/about" class="block px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700 rounded-xl transition-all">About</a>
                 </div>
             </div>
         </nav>
@@ -65,22 +92,24 @@
         </main>
 
         <!-- Footer -->
-        <footer class="bg-white border-t border-gray-100 py-6">
+        <footer class="py-8">
             <div class="max-w-4xl mx-auto px-4 sm:px-6">
-                <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-                    <a href="https://buymeacoffee.com/gigamick" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-800 hover:shadow-md transition-all duration-200">
-                        <span>🍕</span> Buy me a Pizza
-                    </a>
-                    <span class="hidden sm:block text-gray-300">|</span>
-                    <a href="https://github.com/sponsors/Gigamick" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-800 hover:shadow-md transition-all duration-200">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/>
-                        </svg>
-                        Sponsor on GitHub
-                    </a>
+                <div class="flex items-center justify-center gap-6 text-sm text-gray-400 dark:text-gray-500">
+                    <a href="https://dept91.com" target="_blank" class="hover:text-gray-600 dark:hover:text-gray-400 transition-colors">Dept91</a>
+                    <span class="text-gray-300 dark:text-gray-600">·</span>
+                    <a href="/contact" class="hover:text-gray-600 dark:hover:text-gray-400 transition-colors">Contact</a>
+                    <span class="text-gray-300 dark:text-gray-600">·</span>
+                    <a href="https://github.com/GigaMick/burnernote" target="_blank" class="hover:text-gray-600 dark:hover:text-gray-400 transition-colors">Open source</a>
                 </div>
             </div>
         </footer>
     </div>
+
+    <script>
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        }
+    </script>
 </body>
 </html>
