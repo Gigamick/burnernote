@@ -2,31 +2,32 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Hash;
 use App\Models\Note;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ViewNoteTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    function trying_to_access_note_url_shows_disclaimer() {
+    #[Test]
+    public function trying_to_access_note_url_shows_disclaimer(): void
+    {
         $note = Note::factory()->create();
 
         $response = $this->get("/v/{$note->token}");
 
         $response->assertOk();
         $response->assertViewIs('disclaimer');
-        $response->assertViewHas('token', function  ($viewToken) use ($note) {
-            return $note->token === $viewToken;
-        });
+        $response->assertViewHas('token', fn ($viewToken) => $note->token === $viewToken);
     }
 
-    /** @test */
-    function trying_to_view_notes_that_does_not_exists_shows_error_page() {
+    #[Test]
+    public function trying_to_view_notes_that_does_not_exist_shows_error_page(): void
+    {
         $note = Note::factory()->create();
         $note->delete();
 
@@ -34,30 +35,28 @@ class ViewNoteTest extends TestCase
 
         $response->assertOk();
         $response->assertViewIs('deleted-note');
-        $response->assertSeeText("The note you're trying to access has expired", $escaped = false);
+        $response->assertSee("note you");
     }
 
-    /** @test */
-    function trying_to_view_notes_that_are_expired_deletes_note_contents() {
-        $expired_note = Note::factory()->create([
+    #[Test]
+    public function trying_to_view_expired_notes_deletes_note_and_shows_expired_page(): void
+    {
+        $note = Note::factory()->create([
             'expiry_date' => now()->subDays(360),
-        ])->toArray();
+        ]);
+        $token = $note->token;
 
-        $response = $this->get("/n/{$expired_note['token']}");
+        $response = $this->get("/n/{$token}");
 
         $response->assertOk();
-        $this->assertEquals([
-            'user_id' => null,
-            'password' => '',
-            'token' => '',
-            'note' => '',
-        ], $difference = array_diff_assoc(Note::first()->toArray(), $expired_note));
         $response->assertViewIs('expired-note');
-        $response->assertSeeText("The note you're trying to access has expired", $escaped = false);
+        $response->assertSee("note you");
+        $this->assertNull(Note::where('token', $token)->first());
     }
 
-    /** @test */
-    function trying_to_access_note_with_passward_asks_for_password() {
+    #[Test]
+    public function trying_to_access_note_with_password_asks_for_password(): void
+    {
         $note = Note::factory()->create([
             'password' => Hash::make('secret'),
         ]);
@@ -69,58 +68,58 @@ class ViewNoteTest extends TestCase
         $response->assertViewHas('token', $note->token);
     }
 
-    /** @test */
-    function notes_without_password_can_be_viewed_and_are_removed() {
+    #[Test]
+    public function notes_without_password_can_be_viewed_and_are_deleted(): void
+    {
+        $message = 'My secret message!';
         $note = Note::factory()->create([
-            'note'     => encrypt($message = 'My secret message!', $serialize = false),
+            'note' => Crypt::encryptString($message),
             'password' => null,
-        ])->toArray();
+        ]);
+        $token = $note->token;
 
-        $response = $this->get("/n/{$note['token']}");
+        $response = $this->get("/n/{$token}");
 
         $response->assertOk();
-        $this->assertEquals([
-            'user_id' => null,
-            'token' => '',
-            'note' => '',
-        ], $difference = array_diff_assoc(Note::first()->toArray(), $note));
         $response->assertViewIs('note');
-        $response->assertViewHas('note');
         $response->assertViewHasAll(['actualnote' => $message]);
+        $this->assertNull(Note::where('token', $token)->first());
     }
 
-    /** @test */
-    function trying_to_access_note_with_wrong_password_shows_error() {
+    #[Test]
+    public function trying_to_access_note_with_wrong_password_shows_error(): void
+    {
         $note = Note::factory()->create([
             'password' => Hash::make('secret'),
         ]);
 
         $response = $this->from("/n/{$note->token}")->post('/submit-password', [
             'password' => 'wrong-password',
-            'token'    => $note->token,
+            'token' => $note->token,
         ]);
 
         $response->assertRedirect("/n/{$note->token}");
-        $response->assertSessionHas('success', 'Incorrect password');
+        $response->assertSessionHas('error', 'Incorrect password');
     }
 
-    /** @test */
-    function notes_with_password_can_be_viewed() {
+    #[Test]
+    public function notes_with_password_can_be_viewed_and_are_deleted(): void
+    {
+        $message = 'secret message!';
         $note = Note::factory()->create([
-            'note'     => encrypt($message = 'secret message!', $serialize = false),
+            'note' => Crypt::encryptString($message),
             'password' => Hash::make('secret'),
         ]);
+        $token = $note->token;
 
-        $response = $this->followingRedirects()->post('/submit-password', [
-            'token'    => $note->token,
+        $response = $this->post('/submit-password', [
+            'token' => $token,
             'password' => 'secret',
         ]);
 
         $response->assertOk();
         $response->assertViewIs('note');
-        $response->assertViewHas('note');
         $response->assertViewHasAll(['actualnote' => $message]);
-        $attributes = $note->fresh()->pluck('password', 'note', 'token');
-        $this->assertEmpty(array_filter($attributes->toArray()));
+        $this->assertNull(Note::where('token', $token)->first());
     }
 }

@@ -1,24 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
-    <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
-    <script>
-        new ClipboardJS('.copy');
-    </script>
-    <section class="hero mt-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 col-md-8 offset-md-2">
-                    <div data-clipboard-target=".link"  class="card copy pointer p-4 d-flex justify-content-center align-items-center">
-                        <p class="m-0 p-0">We've sent your link to the email address number you supplied.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row mt-5">
-                <div class="col-12 col-md-8 offset-md-2 text-center">
-                    <a href="/" class="text-muted mt-4"><u>Create another Burner Note</u></a>
-                </div>
-            </div>
+    <div class="max-w-md mx-auto px-4 sm:px-6 text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-2xl mb-6">
+            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
         </div>
-    </section>
+
+        <h2 class="text-xl font-bold text-gray-900 mb-2">Email sent!</h2>
+        <p class="text-gray-500 mb-8">We've sent your note link to the email address you provided.</p>
+
+        <a
+            href="/"
+            class="inline-flex items-center justify-center px-6 py-3 bg-gray-900 text-white font-medium rounded-xl hover:bg-gray-800 hover:shadow-md transition-all duration-200"
+        >
+            Create Another Note
+        </a>
+    </div>
 @endsection

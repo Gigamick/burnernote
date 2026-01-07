@@ -1,15 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
-
-    <section class="hero">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 col-md-8 offset-md-2 text-center">
-                    <h3 class="text-muted mt-2 copy-note">The note you're trying to access has expired</h3>
-                </div>
-            </div>
+    <div class="max-w-md mx-auto px-4 sm:px-6 text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-2xl mb-6">
+            <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
         </div>
-    </section>
 
+        <h2 class="text-xl font-bold text-gray-900 mb-2">Note has expired</h2>
+        <p class="text-gray-500 mb-8">The note you're trying to access has expired and has been permanently deleted.</p>
+
+        <a
+            href="/"
+            class="inline-flex items-center justify-center px-6 py-3 bg-gray-900 text-white font-medium rounded-xl hover:bg-gray-800 hover:shadow-md transition-all duration-200"
+        >
+            Create a New Note
+        </a>
+    </div>
 @endsection

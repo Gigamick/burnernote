@@ -2,42 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use SendGrid\Mail\Mail;
-use Twilio\Rest\Client;
+use App\Http\Requests\SendEmailRequest;
+use Exception;
+use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
+use Resend\Laravel\Facades\Resend;
 
 class EmailController extends Controller
 {
-    public function sendemail(Request $request)
+    public function sendemail(SendEmailRequest $request): View
     {
-        $email = new Mail();
-        $email->setFrom("noreply@burnernote.com", "Burner Note");
-        $email->setSubject("A link from Burner Note");
-        $email->addTo($request->email);
-        $email->addContent("text/plain", "You've been sent a note from Burner Note: ".$request->link);
+        $validated = $request->validated();
 
-        $sendgrid = new \SendGrid(env('SENDGRID_APIKEY'));
         try {
-            $response = $sendgrid->send($email);
+            Resend::emails()->send([
+                'from' => 'Burner Note <noreply@burnernote.com>',
+                'to' => [$validated['email']],
+                'subject' => 'A link from Burner Note',
+                'text' => "You've been sent a note from Burner Note: " . $validated['link'],
+            ]);
         } catch (Exception $e) {
-            echo 'Caught exception: ' . $e->getMessage() . "\n";
+            Log::error('Failed to send email via Resend', [
+                'error' => $e->getMessage(),
+            ]);
+            return view('email-sent')->with('error', 'Failed to send email. Please try again.');
         }
 
         return view('email-sent');
-    }
-
-    public function sendsms(Request $request)
-    {
-        $client = new Client(env('TWILIO_ACCOUNT_ID'), env('TWILIO_AUTH_TOKEN'));
-        $client->messages->create(
-
-            $request->phonenumber,
-            array(
-                'from' => env('TWILIO_NUMBER'),
-                'body' => 'Someone sent you a note from Burner Note: '.$request->link
-            )
-        );
-
-        return view('sms-sent');
     }
 }

@@ -2,108 +2,93 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateNoteRequest;
 use App\Models\Note;
 use Carbon\Carbon;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use Mockery\Matcher\Not;
-use Psr\Log\NullLogger;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class NoteController extends Controller
 {
-    public function create(Request $request)
+    public function create(CreateNoteRequest $request): View
     {
-        if (Auth::check()) {
-            $user = Auth::user();
-        }
+        $validated = $request->validated();
+        $expiry = (int) ($validated['expiry'] ?? 7);
 
-        $expiry = $request->expiry ?? 7;
-
-        $note = new Note();
-        $sanitizednote = strip_tags($request->note);
-        $note->note = Crypt::encryptString($sanitizednote);
-        if ($request->password) {
-            $note->password = Hash::make($request->password);
-        } else {
-            $note->password = null;
-        }
-        $note->user_id = $user->id ?? null;
-        $note->token = Str::uuid();
-        $note->expiry_date = Carbon::now()->addDays($expiry);
-        $note->save();
+        $note = Note::create([
+            'note' => Crypt::encryptString(strip_tags($validated['note'])),
+            'password' => isset($validated['password']) ? Hash::make($validated['password']) : null,
+            'user_id' => Auth::id(),
+            'token' => Str::uuid(),
+            'expiry_date' => Carbon::now()->addDays($expiry),
+        ]);
 
         return view('note-summary', compact('note'));
     }
 
-    public function verify($token)
+    public function verify(string $token): View
     {
         return view('disclaimer', compact('token'));
     }
 
-    public function show($token)
+    public function show(string $token): View
     {
-        $note = Note::query()->where('token', $token)->first();
+        $note = Note::where('token', $token)->first();
 
         if (!$note) {
             return view('deleted-note');
         }
 
-        if ($note->expiry_date < Carbon::now()) {
-            $note->note = "";
-            $note->token = "";
-            $note->password = "";
-            $note->save();
-
+        if ($note->isExpired()) {
+            $note->delete();
             return view('expired-note');
-
         }
 
-        if ($note->password != null) {
+        if ($note->password !== null) {
             return view('enter-password', compact('token'));
         }
 
-        $actualnote = Crypt::decryptString($note->note);
-
-        $deletednote = Note::query()->where('token', $token)->first();
-        $deletednote->note = "";
-        $deletednote->token = "";
-        $deletednote->password = "";
-        $deletednote->save();
-
-        return view('note', compact('note', 'actualnote'));
+        return $this->displayAndDeleteNote($note);
     }
 
-    public function password(Request $request)
+    public function password(Request $request): View|\Illuminate\Http\RedirectResponse
     {
+        $request->validate([
+            'token' => ['required', 'string'],
+            'password' => ['required', 'string'],
+        ]);
 
-        $passwordcheck = Note::query()->where('token', $request->token)->first();
-        $password = $passwordcheck->password;
-        $verifypasswordtrue = Hash::check($request->password, $passwordcheck->password);
+        $note = Note::where('token', $request->token)->first();
 
-        if (!$verifypasswordtrue) {
-            return back()->with('success', 'Incorrect password');
+        if (!$note) {
+            return view('deleted-note');
         }
 
-        $check = Note::query()->where([
-            ['token', $request->token],
-            ['password', $password]
-        ])->exists();
+        if (!Hash::check($request->password, $note->password)) {
+            return back()->with('error', 'Incorrect password');
+        }
 
-        if ($check) {
-            $note = Note::query()->where([
-                ['token', $request->token],
-                ['password', $password]
-            ])->first();
+        return $this->displayAndDeleteNote($note);
+    }
 
-            $note->password = null;
-            $note->save();
+    private function displayAndDeleteNote(Note $note): View
+    {
+        try {
+            $actualnote = Crypt::decryptString($note->note);
+        } catch (DecryptException $e) {
+            Log::error('Failed to decrypt note', ['note_id' => $note->id]);
+            $note->delete();
+            return view('deleted-note');
+        }
 
-            return redirect('/n/'.$request->token);
-        };
+        $note->delete();
 
+        return view('note', compact('actualnote'));
     }
 }

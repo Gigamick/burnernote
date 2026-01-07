@@ -3,22 +3,19 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 
 class NoteFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
-    public function definition()
+    public function definition(): array
     {
         return [
-            'note'          => encrypt('secret message', $serialize = false),
-            'password'      => Hash::make('secret'),
-            'expiry_date'   => now()->addDays(7),
-            'token'         => 'token',
+            'note' => Crypt::encryptString('secret message'),
+            'password' => null,
+            'expiry_date' => now()->addDays(7),
+            'token' => Str::uuid()->toString(),
+            'user_id' => null,
         ];
     }
 }

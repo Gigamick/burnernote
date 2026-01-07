@@ -15,7 +15,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // Purge expired notes daily at midnight
+        $schedule->command('notes:purge-expired')->daily();
     }
 
     /**
