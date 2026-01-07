@@ -16,7 +16,7 @@ class EmailController extends Controller
 
         try {
             Resend::emails()->send([
-                'from' => 'Burner Note <noreply@burnernote.com>',
+                'from' => config('mail.from.name') . ' <' . config('mail.from.address') . '>',
                 'to' => [$validated['email']],
                 'subject' => 'A link from Burner Note',
                 'text' => "You've been sent a note from Burner Note: " . $validated['link'],
