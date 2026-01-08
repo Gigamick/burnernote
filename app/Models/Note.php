@@ -19,6 +19,7 @@ class Note extends Model
         'token',
         'receipt_token',
         'user_id',
+        'team_id',
         'expiry_date',
     ];
 

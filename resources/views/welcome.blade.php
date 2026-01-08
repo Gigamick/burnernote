@@ -15,10 +15,32 @@
             </p>
         </div>
 
+        @if(session('success'))
+            <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl">
+                <p class="text-sm text-green-600 dark:text-green-400">{{ session('success') }}</p>
+            </div>
+        @endif
+
         <!-- Form Card -->
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 sm:p-8 transition-colors duration-200">
+            @if($team)
+                <div class="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl">
+                    <p class="text-sm text-blue-600 dark:text-blue-400">
+                        Creating note for <strong>{{ $team->name }}</strong>
+                        @if($team->policy_require_password)
+                            &middot; Password required
+                        @endif
+                        &middot; Max {{ $team->policy_max_expiry_days }} days
+                        &middot; Max {{ $team->policy_max_view_limit }} views
+                    </p>
+                </div>
+            @endif
+
             <form id="note-form" method="post" action="/create-note" class="space-y-6">
                 @csrf
+                @if($team)
+                    <input type="hidden" name="team_id" value="{{ $team->id }}">
+                @endif
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Create your note</label>
@@ -45,12 +67,18 @@
                 <div id="advanced-options" class="grid grid-rows-[0fr] opacity-0 transition-all duration-300 ease-out">
                     <div class="overflow-hidden space-y-6">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password protection</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Password protection
+                            @if($team && $team->policy_require_password)
+                                <span class="text-red-500">*</span>
+                            @endif
+                        </label>
                         <input
                             type="text"
                             name="password"
+                            @if($team && $team->policy_require_password) required @endif
                             class="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-gray-100/10 focus:border-gray-400 dark:focus:border-gray-500 text-gray-900 dark:text-white transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
-                            placeholder="Optional password"
+                            placeholder="{{ $team && $team->policy_require_password ? 'Required password' : 'Optional password' }}"
                         >
                     </div>
 
@@ -59,10 +87,10 @@
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Days till expiry</label>
                             <input
                                 type="number"
-                                min="1"
-                                max="30"
+                                min="{{ $team ? $team->policy_min_expiry_days : 1 }}"
+                                max="{{ $team ? $team->policy_max_expiry_days : 30 }}"
                                 name="expiry"
-                                value="7"
+                                value="{{ $team ? min(7, $team->policy_max_expiry_days) : 7 }}"
                                 class="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-gray-100/10 focus:border-gray-400 dark:focus:border-gray-500 text-gray-900 dark:text-white transition-all duration-200"
                             >
                         </div>
@@ -71,7 +99,7 @@
                             <input
                                 type="number"
                                 min="1"
-                                max="10"
+                                max="{{ $team ? $team->policy_max_view_limit : 10 }}"
                                 name="max_views"
                                 value="1"
                                 class="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-gray-100/10 focus:border-gray-400 dark:focus:border-gray-500 text-gray-900 dark:text-white transition-all duration-200"

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateNoteRequest;
 use App\Models\Note;
 use App\Models\Receipt;
+use App\Models\TeamAuditLog;
 use Carbon\Carbon;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
@@ -23,12 +24,14 @@ class NoteController extends Controller
         $expiry = (int) ($validated['expiry'] ?? 7);
         $expiryDate = Carbon::now()->addDays($expiry);
         $clientEncrypted = $request->has('client_encrypted');
+        $team = $request->team;
 
         $receipt = Receipt::create([
             'token' => Str::uuid(),
             'status' => 'pending',
             'notify_email' => $validated['notify_email'] ?? null,
             'expires_at' => $expiryDate,
+            'team_id' => $team?->id,
         ]);
 
         // For client-encrypted notes, the content is already encrypted client-side
@@ -43,10 +46,22 @@ class NoteController extends Controller
             'client_encrypted' => $clientEncrypted,
             'max_views' => (int) ($validated['max_views'] ?? 1),
             'user_id' => Auth::id(),
+            'team_id' => $team?->id,
             'token' => Str::uuid(),
             'receipt_token' => $receipt->token,
             'expiry_date' => $expiryDate,
         ]);
+
+        // Log to team audit if team note
+        if ($team) {
+            TeamAuditLog::log($team, 'note_created', Auth::user(), [
+                'note_token' => $note->token,
+                'expiry_days' => $expiry,
+                'max_views' => $note->max_views,
+                'has_password' => !empty($validated['password']),
+                'recipient_email' => $validated['notify_email'] ?? null,
+            ]);
+        }
 
         return view('note-summary', compact('note', 'receipt'));
     }
@@ -128,6 +143,18 @@ class NoteController extends Controller
             Log::error('Failed to decrypt note', ['note_id' => $note->id]);
             $note->delete();
             return view('deleted-note');
+        }
+
+        // Log to team audit if team note
+        if ($note->team_id) {
+            $team = \App\Models\Team::find($note->team_id);
+            if ($team) {
+                TeamAuditLog::log($team, 'note_viewed', null, [
+                    'note_token' => $note->token,
+                    'ip_address' => request()->ip(),
+                    'user_agent' => request()->userAgent(),
+                ]);
+            }
         }
 
         // Increment view count

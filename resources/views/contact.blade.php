@@ -4,11 +4,16 @@
     <div class="max-w-md mx-auto px-4 sm:px-6">
         <div class="text-center mb-8">
             <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Contact</h1>
-            <p class="text-gray-500 dark:text-gray-400 mt-2">We'd love to hear from you. Use the form below to say hi.</p>
         </div>
 
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 sm:p-8 transition-colors duration-200">
-            <form method="POST" action="https://submit-form.com/coj4IR32" class="space-y-5">
+            @if(session('success'))
+                <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl">
+                    <p class="text-sm text-green-600 dark:text-green-400">{{ session('success') }}</p>
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('contact.send') }}" class="space-y-5">
                 @csrf
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Your Email</label>
@@ -16,9 +21,13 @@
                         type="email"
                         name="email"
                         required
+                        value="{{ old('email') }}"
                         class="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-gray-100/10 focus:border-gray-400 dark:focus:border-gray-500 text-gray-900 dark:text-white transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                         placeholder="you@example.com"
                     >
+                    @error('email')
+                        <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
@@ -29,7 +38,10 @@
                         required
                         class="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-gray-100/10 focus:border-gray-400 dark:focus:border-gray-500 text-gray-900 dark:text-white transition-all duration-200 resize-none placeholder:text-gray-400 dark:placeholder:text-gray-500"
                         placeholder="What's on your mind?"
-                    ></textarea>
+                    >{{ old('message') }}</textarea>
+                    @error('message')
+                        <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <button

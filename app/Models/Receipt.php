@@ -14,6 +14,7 @@ class Receipt extends Model
         'notify_email',
         'viewed_at',
         'expires_at',
+        'team_id',
     ];
 
     protected $casts = [
