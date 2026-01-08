@@ -6,8 +6,7 @@
         <div class="text-center mb-12">
             <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Burner Note Pro</h1>
             <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                The same zero-knowledge encryption you trust, with audit logs, security policies, and full control.
-            </p>
+                The same zero-knowledge encryption you trust, with the visibility and control professionals need. Audit logs, security policies, and compliance-ready oversight built in.            </p>
         </div>
 
         <!-- Value Props -->
