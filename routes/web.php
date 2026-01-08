@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\MagicLinkController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\EmailController;
@@ -73,6 +74,9 @@ Route::view('/about', 'about');
 Route::view('/pro', 'pro');
 Route::view('/contact', 'contact');
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
+
+// Admin
+Route::get('/admin', [AdminController::class, 'dashboard'])->middleware('auth')->name('admin.dashboard');
 
 Route::post('/send-email', [EmailController::class, 'sendemail']);
 
