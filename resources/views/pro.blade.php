@@ -10,6 +10,22 @@
 
         <!-- Value Props -->
         <div class="grid gap-6 mb-12">
+            <!-- Read Receipts -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 sm:p-8 transition-colors duration-200">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Read Receipts</h2>
+                <p class="text-gray-600 dark:text-gray-400">
+                    Get notified the moment your note is read. Know exactly when sensitive information was accessed.
+                </p>
+            </div>
+
+            <!-- Multiple Views -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 sm:p-8 transition-colors duration-200">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Multiple Views</h2>
+                <p class="text-gray-600 dark:text-gray-400">
+                    Allow notes to be viewed more than once. Perfect for sharing credentials that might need to be accessed again.
+                </p>
+            </div>
+
             <!-- Audit Trail -->
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 sm:p-8 transition-colors duration-200">
                 <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Complete Audit Trail</h2>
@@ -32,7 +48,7 @@
                 <ul class="space-y-2 text-sm text-gray-500 dark:text-gray-400">
                     <li>Maximum expiry time</li>
                     <li>Required password protection</li>
-                    <li>Maximum view limits</li>
+                    <li>View limits</li>
                 </ul>
             </div>
 

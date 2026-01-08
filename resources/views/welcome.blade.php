@@ -95,26 +95,49 @@
                             >
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Allowed views</label>
-                            <input
-                                type="number"
-                                min="1"
-                                max="{{ $team ? $team->policy_max_view_limit : 10 }}"
-                                name="max_views"
-                                value="1"
-                                class="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-gray-100/10 focus:border-gray-400 dark:focus:border-gray-500 text-gray-900 dark:text-white transition-all duration-200"
-                            >
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Allowed views
+                                @unless($team)
+                                    <a href="/pro" class="text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 font-normal ml-1">Pro</a>
+                                @endunless
+                            </label>
+                            @if($team)
+                                <input
+                                    type="number"
+                                    min="1"
+                                    max="{{ $team->policy_max_view_limit }}"
+                                    name="max_views"
+                                    value="1"
+                                    class="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-gray-100/10 focus:border-gray-400 dark:focus:border-gray-500 text-gray-900 dark:text-white transition-all duration-200"
+                                >
+                            @else
+                                <input type="hidden" name="max_views" value="1">
+                                <div class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-400 dark:text-gray-500">
+                                    1 view (burn after reading)
+                                </div>
+                            @endif
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Notify when read</label>
-                        <input
-                            type="email"
-                            name="notify_email"
-                            class="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-gray-100/10 focus:border-gray-400 dark:focus:border-gray-500 text-gray-900 dark:text-white transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
-                            placeholder="your@email.com"
-                        >
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Read receipts
+                            @unless($team)
+                                <a href="/pro" class="text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 font-normal ml-1">Pro</a>
+                            @endunless
+                        </label>
+                        @if($team)
+                            <input
+                                type="email"
+                                name="notify_email"
+                                class="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-gray-100/10 focus:border-gray-400 dark:focus:border-gray-500 text-gray-900 dark:text-white transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                                placeholder="your@email.com"
+                            >
+                        @else
+                            <div class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-400 dark:text-gray-500">
+                                Get notified when your note is read
+                            </div>
+                        @endif
                     </div>
                     </div>
                 </div>

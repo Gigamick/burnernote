@@ -31,6 +31,8 @@ class CreateNoteRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator) {
+            $maxViews = (int) ($this->max_views ?? 1);
+
             if ($this->team_id) {
                 $this->team = Team::find($this->team_id);
 
@@ -42,7 +44,6 @@ class CreateNoteRequest extends FormRequest
 
                 // Enforce team policies
                 $expiry = (int) ($this->expiry ?? 7);
-                $maxViews = (int) ($this->max_views ?? 1);
 
                 if ($expiry < $this->team->policy_min_expiry_days) {
                     $validator->errors()->add('expiry', "Minimum expiry is {$this->team->policy_min_expiry_days} days for this team.");
@@ -58,6 +59,17 @@ class CreateNoteRequest extends FormRequest
 
                 if ($this->team->policy_require_password && empty($this->password)) {
                     $validator->errors()->add('password', 'Password is required for this team.');
+                }
+            } else {
+                // Free tier restrictions - Pro features require a team
+                if ($maxViews > 1) {
+                    // Silently enforce 1 view for free users
+                    $this->merge(['max_views' => 1]);
+                }
+
+                if (!empty($this->notify_email)) {
+                    // Silently remove notify_email for free users
+                    $this->merge(['notify_email' => null]);
                 }
             }
         });
