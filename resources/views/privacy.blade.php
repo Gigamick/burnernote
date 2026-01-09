@@ -115,17 +115,17 @@
 
                 <h3 class="text-md font-semibold text-gray-900 dark:text-white pt-2">Analytics</h3>
                 <p>
-                    We use <a href="https://plausible.io" target="_blank" class="text-gray-900 dark:text-white underline hover:text-gray-700 dark:hover:text-gray-300">Plausible Analytics</a>, a privacy-focused, cookie-free analytics service. Plausible collects:
+                    We use <a href="https://simpleanalytics.com" target="_blank" class="text-gray-900 dark:text-white underline hover:text-gray-700 dark:hover:text-gray-300">Simple Analytics</a>, a privacy-focused, cookie-free analytics service. Simple Analytics collects:
                 </p>
                 <ul class="list-disc list-inside space-y-1 ml-2">
                     <li>Page URL (without query strings or fragments)</li>
                     <li>Referrer (previous page)</li>
                     <li>Browser and OS (from User-Agent)</li>
                     <li>Device type (desktop/mobile)</li>
-                    <li>Country (from anonymized IP &mdash; IP is discarded, not stored)</li>
+                    <li>Country (IP is never stored or logged)</li>
                 </ul>
                 <p>
-                    Plausible does not use cookies, does not track users across sites, and is GDPR/CCPA compliant by design. No personal data is collected or stored.
+                    Simple Analytics does not use cookies, does not track users across sites, and is GDPR/CCPA compliant by design. No personal data is collected or stored.
                 </p>
 
                 <h3 class="text-md font-semibold text-gray-900 dark:text-white pt-4">Account Data</h3>
@@ -168,7 +168,7 @@
                         <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
-                        <span><strong class="text-gray-900 dark:text-white">Third-party trackers:</strong> No Google Analytics, Facebook Pixel, or any tracking scripts beyond Plausible.</span>
+                        <span><strong class="text-gray-900 dark:text-white">Third-party trackers:</strong> No Google Analytics, Facebook Pixel, or any tracking scripts beyond Simple Analytics.</span>
                     </li>
                     <li class="flex items-start gap-3">
                         <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -309,7 +309,7 @@
                     <li><code class="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded">note-encrypted.blade.php</code> &mdash; client-side decryption</li>
                     <li><code class="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded">NoteController.php</code> &mdash; server-side note handling</li>
                     <li><code class="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded">TeamAuditLog.php</code> &mdash; audit logging model</li>
-                    <li><code class="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded">layouts/app.blade.php</code> &mdash; analytics script (Plausible only)</li>
+                    <li><code class="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded">layouts/app.blade.php</code> &mdash; analytics script (Simple Analytics only)</li>
                 </ul>
                 <p class="pt-2 font-medium text-gray-900 dark:text-white">
                     If our code doesn't match this policy, the code is the source of truth. File an issue.

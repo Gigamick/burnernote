@@ -8,7 +8,8 @@
             document.documentElement.classList.remove('dark')
         }
     </script>
-    <script defer data-domain="burnernote.com" src="https://plausible.io/js/plausible.js"></script>
+    <!-- 100% privacy-first analytics -->
+    <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
