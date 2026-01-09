@@ -13,21 +13,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Burner Note</title>
-    <meta name="title" content="Burner Note">
-    <meta name="description" content="Send secure and encrypted notes that self destruct once they've been read">
+    <!-- Primary Meta Tags -->
+    <title>Burner Note - Self-Destructing Encrypted Notes | Zero-Knowledge Privacy</title>
+    <meta name="title" content="Burner Note - Self-Destructing Encrypted Notes | Zero-Knowledge Privacy">
+    <meta name="description" content="Send private notes that automatically delete after reading. End-to-end AES-256 encryption in your browser. Zero-knowledge architecture means we can't read your messages. Free, open source, no tracking.">
+    <meta name="keywords" content="encrypted notes, self-destructing messages, secure notes, private messaging, burn after reading, zero-knowledge encryption, end-to-end encryption, secure file sharing, private notes, disposable messages, encrypted messaging, secure communication, privacy tool, open source encryption">
+    <meta name="author" content="Burner Note">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://burnernote.com/">
 
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://burnernote.com/">
-    <meta property="og:title" content="Burner Note">
-    <meta property="og:description" content="Send secure and encrypted notes that self destruct once they've been read">
+    <meta property="og:title" content="Burner Note - Self-Destructing Encrypted Notes">
+    <meta property="og:description" content="Send private notes that automatically delete after reading. End-to-end AES-256 encryption. Zero-knowledge architecture. Free and open source.">
     <meta property="og:image" content="https://burnernote.com/img/burnernote.png">
+    <meta property="og:site_name" content="Burner Note">
+    <meta property="og:locale" content="en_US">
 
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://burnernote.com/">
-    <meta property="twitter:title" content="Burner Note">
-    <meta property="twitter:description" content="Send secure and encrypted notes that self destruct once they've been read">
-    <meta property="twitter:image" content="https://burnernote.com/img/burnernote.png">
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://burnernote.com/">
+    <meta name="twitter:title" content="Burner Note - Self-Destructing Encrypted Notes">
+    <meta name="twitter:description" content="Send private notes that automatically delete after reading. End-to-end AES-256 encryption. Zero-knowledge architecture. Free and open source.">
+    <meta name="twitter:image" content="https://burnernote.com/img/burnernote.png">
+
+    <!-- Additional SEO -->
+    <meta name="application-name" content="Burner Note">
+    <meta name="theme-color" content="#111827">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Burner Note">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Burner Note",
+        "url": "https://burnernote.com",
+        "description": "Send private notes that automatically delete after reading. End-to-end AES-256 encryption with zero-knowledge architecture.",
+        "applicationCategory": "SecurityApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "featureList": [
+            "End-to-end AES-256-GCM encryption",
+            "Self-destructing messages",
+            "Zero-knowledge architecture",
+            "Password protection",
+            "No tracking or ads",
+            "Open source"
+        ],
+        "screenshot": "https://burnernote.com/img/burnernote.png"
+    }
+    </script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
