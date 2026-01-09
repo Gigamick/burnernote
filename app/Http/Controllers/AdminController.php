@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Receipt;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -20,23 +21,24 @@ class AdminController extends Controller
 
         // Stats
         $totalAccounts = User::count();
+        $totalTeams = Team::count();
         $totalNotes = Receipt::count();
 
-        // Get note counts per user from receipts (tracks all notes, free + Pro)
-        $noteCounts = Receipt::whereNotNull('user_id')
-            ->selectRaw('user_id, count(*) as count')
-            ->groupBy('user_id')
-            ->pluck('count', 'user_id');
+        // Get note counts per team from receipts
+        $teamNoteCounts = Receipt::whereNotNull('team_id')
+            ->selectRaw('team_id, count(*) as count')
+            ->groupBy('team_id')
+            ->pluck('count', 'team_id');
 
-        // Users with their teams and note counts
-        $users = User::orderByDesc('created_at')
+        // Teams with their note counts and member counts
+        $teams = Team::withCount('members')
+            ->orderByDesc('created_at')
             ->get()
-            ->map(function ($user) use ($noteCounts) {
-                $user->team = $user->teams()->first();
-                $user->notes_count = $noteCounts[$user->id] ?? 0;
-                return $user;
+            ->map(function ($team) use ($teamNoteCounts) {
+                $team->notes_count = $teamNoteCounts[$team->id] ?? 0;
+                return $team;
             });
 
-        return view('admin.dashboard', compact('totalAccounts', 'totalNotes', 'users'));
+        return view('admin.dashboard', compact('totalAccounts', 'totalTeams', 'totalNotes', 'teams'));
     }
 }

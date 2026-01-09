@@ -2,16 +2,9 @@
 
 @section('content')
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
-        <div class="flex justify-between items-start mb-8">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">{{ $team->name }}</h1>
-                <p class="text-gray-500 dark:text-gray-400 mt-1">{{ $team->members->count() }} {{ Str::plural('member', $team->members->count()) }}</p>
-            </div>
-            @can('update', $team)
-                <a href="{{ route('teams.settings', $team) }}" class="px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white border border-gray-200 dark:border-gray-700 rounded-xl hover:border-gray-300 dark:hover:border-gray-600 transition-colors">
-                    Settings
-                </a>
-            @endcan
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">{{ $team->name }}</h1>
+            <p class="text-gray-500 dark:text-gray-400 mt-1">{{ $team->members->count() }} {{ Str::plural('member', $team->members->count()) }}</p>
         </div>
 
         @if(session('success'))
@@ -20,18 +13,16 @@
             </div>
         @endif
 
-        <!-- Quick Actions -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 mb-6 transition-colors duration-200">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Create a Note</h2>
-            <p class="text-gray-600 dark:text-gray-400 mb-4">Notes created here will be tracked in your team's audit log.</p>
-            <a href="/?team={{ $team->slug }}" class="inline-block px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors">
-                Create Team Note
-            </a>
-        </div>
-
         <!-- Team Policies -->
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 mb-6 transition-colors duration-200">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Team Policies</h2>
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Team Policies</h2>
+                @can('update', $team)
+                    <a href="{{ route('teams.settings', $team) }}" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                        Settings
+                    </a>
+                @endcan
+            </div>
             <div class="grid grid-cols-2 gap-4 text-sm">
                 <div>
                     <span class="text-gray-500 dark:text-gray-400">Max expiry:</span>
