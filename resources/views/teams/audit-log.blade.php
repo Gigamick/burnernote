@@ -4,8 +4,56 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
         <div class="mb-8">
             <a href="{{ route('teams.show', $team) }}" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 text-sm">&larr; Back to {{ $team->name }}</a>
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mt-2">Audit Log</h1>
+            <div class="flex items-center justify-between mt-2">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Audit Log</h1>
+                @if($team->isOwner(auth()->user()) && $logs->isNotEmpty())
+                    <div x-data="{ showConfirm: false }">
+                        <button
+                            @click="showConfirm = true"
+                            type="button"
+                            class="px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                        >
+                            Clear audit log
+                        </button>
+
+                        <!-- Confirmation Modal -->
+                        <div x-show="showConfirm" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+                            <div @click.away="showConfirm = false" class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-md w-full p-6">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Clear audit log?</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
+                                    This will permanently delete all {{ $logs->count() }} audit log entries. This action cannot be undone.
+                                </p>
+                                <div class="flex gap-3 justify-end">
+                                    <button
+                                        @click="showConfirm = false"
+                                        type="button"
+                                        class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <form method="POST" action="{{ route('teams.audit-log.clear', $team) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button
+                                            type="submit"
+                                            class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+                                        >
+                                            Delete all
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            </div>
         </div>
+
+        @if(session('success'))
+            <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl">
+                <p class="text-sm text-green-600 dark:text-green-400">{{ session('success') }}</p>
+            </div>
+        @endif
 
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden transition-colors duration-200">
             @if($logs->isEmpty())

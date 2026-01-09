@@ -97,6 +97,8 @@
                 <div class="flex items-center justify-center gap-6 text-sm text-gray-400 dark:text-gray-500">
                     <a href="/about" class="hover:text-gray-600 dark:hover:text-gray-400 transition-colors">About</a>
                     <span class="text-gray-300 dark:text-gray-600">·</span>
+                    <a href="/privacy" class="hover:text-gray-600 dark:hover:text-gray-400 transition-colors">Privacy</a>
+                    <span class="text-gray-300 dark:text-gray-600">·</span>
                     <a href="/contact" class="hover:text-gray-600 dark:hover:text-gray-400 transition-colors">Contact</a>
                     <span class="text-gray-300 dark:text-gray-600">·</span>
                     <a href="https://github.com/GigaMick/burnernote" target="_blank" class="hover:text-gray-600 dark:hover:text-gray-400 transition-colors">Open source</a>

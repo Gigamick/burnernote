@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/teams/{team}/settings', [TeamController::class, 'updateSettings'])->name('teams.settings.update');
     Route::get('/teams/{team}/members', [TeamController::class, 'members'])->name('teams.members');
     Route::get('/teams/{team}/audit-log', [TeamController::class, 'auditLog'])->name('teams.audit-log');
+    Route::delete('/teams/{team}/audit-log', [TeamController::class, 'clearAuditLog'])->name('teams.audit-log.clear');
     Route::post('/teams/{team}/invite', [TeamMemberController::class, 'invite'])->name('teams.invite');
     Route::delete('/teams/{team}/members/{member}', [TeamMemberController::class, 'remove'])->name('teams.members.remove');
     Route::delete('/teams/{team}/invitations/{invitation}', [TeamMemberController::class, 'cancelInvitation'])->name('teams.invitations.cancel');
@@ -72,6 +73,7 @@ Route::get('/v/{token}', [NoteController::class, 'verify']);
 
 Route::view('/about', 'about');
 Route::view('/pro', 'pro');
+Route::view('/privacy', 'privacy');
 Route::view('/contact', 'contact');
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 

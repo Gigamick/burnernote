@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Note;
 use App\Models\Receipt;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -23,13 +22,18 @@ class AdminController extends Controller
         $totalAccounts = User::count();
         $totalNotes = Receipt::count();
 
+        // Get note counts per user from receipts (tracks all notes, free + Pro)
+        $noteCounts = Receipt::whereNotNull('user_id')
+            ->selectRaw('user_id, count(*) as count')
+            ->groupBy('user_id')
+            ->pluck('count', 'user_id');
+
         // Users with their teams and note counts
-        $users = User::withCount(['ownedTeams'])
-            ->orderByDesc('created_at')
+        $users = User::orderByDesc('created_at')
             ->get()
-            ->map(function ($user) {
+            ->map(function ($user) use ($noteCounts) {
                 $user->team = $user->teams()->first();
-                $user->notes_count = Receipt::where('team_id', $user->team?->id)->count();
+                $user->notes_count = $noteCounts[$user->id] ?? 0;
                 return $user;
             });
 

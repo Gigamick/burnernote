@@ -118,6 +118,17 @@ class TeamController extends Controller
         return view('teams.members', compact('team'));
     }
 
+    public function clearAuditLog(Team $team): RedirectResponse
+    {
+        $this->authorize('delete', $team);
+
+        $count = $team->auditLogs()->count();
+        $team->auditLogs()->delete();
+
+        return redirect()->route('teams.audit-log', $team)
+            ->with('success', "Deleted {$count} audit log entries.");
+    }
+
     public function auditLog(Team $team): View
     {
         $this->authorize('view', $team);

@@ -32,6 +32,7 @@ class NoteController extends Controller
             'notify_email' => $validated['notify_email'] ?? null,
             'expires_at' => $expiryDate,
             'team_id' => $team?->id,
+            'user_id' => Auth::id(),
         ]);
 
         // For client-encrypted notes, the content is already encrypted client-side

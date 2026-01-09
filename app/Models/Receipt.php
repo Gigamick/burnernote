@@ -15,6 +15,7 @@ class Receipt extends Model
         'viewed_at',
         'expires_at',
         'team_id',
+        'user_id',
     ];
 
     protected $casts = [
