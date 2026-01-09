@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SendEmailRequest;
+use App\Mail\NoteLinkMail;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
-use Resend\Laravel\Facades\Resend;
 
 class EmailController extends Controller
 {
@@ -15,14 +16,9 @@ class EmailController extends Controller
         $validated = $request->validated();
 
         try {
-            Resend::emails()->send([
-                'from' => config('mail.from.name') . ' <' . config('mail.from.address') . '>',
-                'to' => [$validated['email']],
-                'subject' => 'A link from Burner Note',
-                'text' => "You've been sent a note from Burner Note: " . $validated['link'],
-            ]);
+            Mail::to($validated['email'])->send(new NoteLinkMail($validated['link']));
         } catch (Exception $e) {
-            Log::error('Failed to send email via Resend', [
+            Log::error('Failed to send email', [
                 'error' => $e->getMessage(),
             ]);
             return view('email-sent')->with('error', 'Failed to send email. Please try again.');

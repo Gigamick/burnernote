@@ -5,9 +5,9 @@
         <!-- Hero Section -->
         <div class="text-center mb-10">
             <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white leading-tight">
-                Send notes that self-destruct when they're read
+                Send notes that self-destruct when read
             </h1>
-            <p class="mt-2 text-2xl text-gray-600 dark:text-gray-400 leading-relaxed">
+            <p class="mt-2 text-xl text-gray-600 dark:text-gray-400 leading-relaxed">
                 Encrypted in your browser. Zero knowledge. No tracking.
             </p>
             <p class="mt-2 text-lg text-gray-600 dark:text-gray-400">

@@ -8,7 +8,7 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Quicksand', 'system-ui', 'sans-serif'],
+                sans: ['Poppins', 'system-ui', 'sans-serif'],
             },
         },
     },
