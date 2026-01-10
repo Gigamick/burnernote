@@ -115,19 +115,44 @@ class MagicLinkController extends Controller
     {
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'last_name' => 'nullable|string|max:255',
         ]);
 
         $user = Auth::user();
+        $name = $validated['last_name']
+            ? $validated['first_name'] . ' ' . $validated['last_name']
+            : $validated['first_name'];
+
         $user->update([
             'first_name' => $validated['first_name'],
-            'last_name' => $validated['last_name'],
-            'name' => $validated['first_name'] . ' ' . $validated['last_name'],
+            'last_name' => $validated['last_name'] ?? null,
+            'name' => $name,
             'profile_completed' => true,
         ]);
 
-        // Redirect to team creation as part of onboarding
-        return redirect()->route('teams.create')->with('onboarding', true);
+        // Redirect to choose account mode
+        return redirect()->route('auth.choose-mode');
+    }
+
+    public function showChooseMode(): View
+    {
+        return view('auth.choose-mode');
+    }
+
+    public function chooseMode(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'mode' => 'required|in:individual,team',
+        ]);
+
+        $user = Auth::user();
+        $user->update(['account_mode' => $validated['mode']]);
+
+        if ($validated['mode'] === 'team') {
+            return redirect()->route('teams.create')->with('onboarding', true);
+        }
+
+        return redirect('/')->with('success', 'Welcome to Burner Note Pro!');
     }
 
     public function logout(Request $request): RedirectResponse

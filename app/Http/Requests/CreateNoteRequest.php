@@ -60,8 +60,28 @@ class CreateNoteRequest extends FormRequest
                 if ($this->team->policy_require_password && empty($this->password)) {
                     $validator->errors()->add('password', 'Password is required for this team.');
                 }
+            } elseif (Auth::check() && Auth::user()->account_mode === 'individual') {
+                // Individual mode - enforce user's personal defaults
+                $user = Auth::user();
+                $expiry = (int) ($this->expiry ?? 7);
+
+                if ($expiry < $user->default_min_expiry_days) {
+                    $validator->errors()->add('expiry', "Minimum expiry is {$user->default_min_expiry_days} days.");
+                }
+
+                if ($expiry > $user->default_max_expiry_days) {
+                    $validator->errors()->add('expiry', "Maximum expiry is {$user->default_max_expiry_days} days.");
+                }
+
+                if ($maxViews > $user->default_max_view_limit) {
+                    $validator->errors()->add('max_views', "Maximum views is {$user->default_max_view_limit}.");
+                }
+
+                if ($user->default_require_password && empty($this->password)) {
+                    $validator->errors()->add('password', 'Password is required based on your defaults.');
+                }
             } else {
-                // Free tier restrictions - Pro features require a team
+                // Free tier restrictions - Pro features require a team or individual account
                 if ($maxViews > 1) {
                     // Silently enforce 1 view for free users
                     $this->merge(['max_views' => 1]);

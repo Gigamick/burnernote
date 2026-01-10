@@ -50,8 +50,8 @@
         </div>
 
         @if(session('success'))
-            <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl">
-                <p class="text-sm text-green-600 dark:text-green-400">{{ session('success') }}</p>
+            <div class="mb-6 p-4 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl">
+                <p class="text-sm text-gray-600 dark:text-gray-400">{{ session('success') }}</p>
             </div>
         @endif
 

@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\MagicLinkController;
+use App\Http\Controllers\BurnMeController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\NoteController;
@@ -23,6 +25,8 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/auth/complete-profile', [MagicLinkController::class, 'showCompleteProfile'])->name('auth.complete-profile');
     Route::post('/auth/complete-profile', [MagicLinkController::class, 'completeProfile']);
+    Route::get('/auth/choose-mode', [MagicLinkController::class, 'showChooseMode'])->name('auth.choose-mode');
+    Route::post('/auth/choose-mode', [MagicLinkController::class, 'chooseMode'])->name('auth.choose-mode.store');
 });
 
 Route::post('/logout', [MagicLinkController::class, 'logout'])
@@ -48,6 +52,23 @@ Route::middleware('auth')->group(function () {
     Route::delete('/teams/{team}/invitations/{invitation}', [TeamMemberController::class, 'cancelInvitation'])->name('teams.invitations.cancel');
 });
 
+// Account routes
+Route::middleware('auth')->prefix('account')->name('account.')->group(function () {
+    Route::get('/settings', [AccountController::class, 'settings'])->name('settings');
+    Route::put('/profile', [AccountController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/defaults', [AccountController::class, 'updateDefaults'])->name('defaults.update');
+    Route::delete('/', [AccountController::class, 'destroy'])->name('destroy');
+
+    // Burn Me Inbox
+    Route::get('/inbox', [AccountController::class, 'inbox'])->name('inbox');
+    Route::get('/inbox/{noteId}', [AccountController::class, 'viewInboxNote'])->name('inbox.view');
+    Route::put('/burn-me', [AccountController::class, 'updateBurnMe'])->name('burn-me.update');
+});
+
+// Burn Me public routes
+Route::get('/b/{slug}', [BurnMeController::class, 'show'])->name('burn-me.show');
+Route::post('/b/{slug}', [BurnMeController::class, 'store'])->name('burn-me.store');
+
 Route::get('/', function () {
     $legacyCount = (int) env('LEGACY_BURN_COUNT', 0);
     try {
@@ -59,11 +80,16 @@ Route::get('/', function () {
 
     // Get user's team if logged in
     $team = null;
+    $user = null;
+    $isIndividual = false;
+
     if (Auth::check()) {
-        $team = Auth::user()->teams()->first();
+        $user = Auth::user();
+        $team = $user->teams()->first();
+        $isIndividual = $user->account_mode === 'individual';
     }
 
-    return view('welcome', compact('burnCount', 'team'));
+    return view('welcome', compact('burnCount', 'team', 'user', 'isIndividual'));
 });
 
 Route::post('/create-note', [NoteController::class, 'create']);

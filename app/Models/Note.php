@@ -20,6 +20,10 @@ class Note extends Model
         'receipt_token',
         'user_id',
         'team_id',
+        'recipient_user_id',
+        'is_burn_me',
+        'read_at',
+        'encrypted_client_key',
         'expiry_date',
     ];
 
@@ -28,6 +32,8 @@ class Note extends Model
         'client_encrypted' => 'boolean',
         'max_views' => 'integer',
         'view_count' => 'integer',
+        'is_burn_me' => 'boolean',
+        'read_at' => 'datetime',
     ];
 
     public function user(): BelongsTo
@@ -63,5 +69,17 @@ class Note extends Model
     public function shouldBeDeleted(): bool
     {
         return $this->view_count >= $this->max_views;
+    }
+
+    public function recipient(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'recipient_user_id');
+    }
+
+    public function markAsRead(): void
+    {
+        if (!$this->read_at) {
+            $this->update(['read_at' => now()]);
+        }
     }
 }

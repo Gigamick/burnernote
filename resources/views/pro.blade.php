@@ -26,6 +26,20 @@
                 </p>
             </div>
 
+            <!-- Burn Box -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 sm:p-8 transition-colors duration-200">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Burn Box</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-4">
+                    Your own public inbox for receiving encrypted notes. Share your unique link and let anyone send you self-destructing messages.
+                </p>
+                <ul class="space-y-2 text-sm text-gray-500 dark:text-gray-400">
+                    <li>Custom shareable URL</li>
+                    <li>Email notifications when notes arrive</li>
+                    <li>Same zero-knowledge encryption</li>
+                    <li>Disable or regenerate your link anytime</li>
+                </ul>
+            </div>
+
             <!-- Audit Trail -->
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 sm:p-8 transition-colors duration-200">
                 <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Complete Audit Trail</h2>

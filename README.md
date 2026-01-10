@@ -10,6 +10,8 @@
 
 * **Auto self destruct.** The note will expire after a set number of days, **default to 7 days**
 
+* **Burn Box.** Registered users get a public inbox URL where anyone can send them encrypted notes. [Learn more](docs/BURN-BOX.md)
+
 
 ### :zap: Installation using [laravel\valet](https://laravel.com/docs/10.x/valet)
 

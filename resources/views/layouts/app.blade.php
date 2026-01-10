@@ -120,6 +120,17 @@
                                     <a href="{{ route('register') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Create Account</a>
                                 @endguest
                                 @auth
+                                    <a href="{{ route('account.settings') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Account Settings</a>
+                                    @if(auth()->user()->burn_me_enabled)
+                                        <a href="{{ route('account.inbox') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                            Burn Box
+                                            @if(auth()->user()->unreadBurnMeNotes()->count() > 0)
+                                                <span class="ml-1 px-1.5 py-0.5 text-xs bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-full">
+                                                    {{ auth()->user()->unreadBurnMeNotes()->count() }}
+                                                </span>
+                                            @endif
+                                        </a>
+                                    @endif
                                     <a href="{{ route('teams.index') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">My Teams</a>
                                     @if(auth()->user()->email === env('ADMIN_EMAIL'))
                                         <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Admin</a>

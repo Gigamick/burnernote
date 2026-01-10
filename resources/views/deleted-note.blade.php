@@ -11,11 +11,20 @@
         <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Note not found</h2>
         <p class="text-gray-500 dark:text-gray-400 mb-8">The note you're trying to access has expired or has already been viewed.</p>
 
-        <a
-            href="/"
-            class="inline-flex items-center justify-center px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 hover:shadow-md transition-all duration-200"
-        >
-            Create a New Note
-        </a>
+        @if(!empty($fromInbox))
+            <a
+                href="{{ route('account.inbox') }}"
+                class="inline-flex items-center justify-center px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 hover:shadow-md transition-all duration-200"
+            >
+                Back to Inbox
+            </a>
+        @else
+            <a
+                href="/"
+                class="inline-flex items-center justify-center px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 hover:shadow-md transition-all duration-200"
+            >
+                Create a New Note
+            </a>
+        @endif
     </div>
 @endsection

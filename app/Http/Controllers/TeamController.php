@@ -64,7 +64,7 @@ class TeamController extends Controller
         return view('teams.settings', compact('team'));
     }
 
-    public function updateSettings(Request $request, Team $team): RedirectResponse
+    public function updateSettings(Request $request, Team $team): RedirectResponse|\Illuminate\Http\JsonResponse
     {
         $this->authorize('update', $team);
 
@@ -80,6 +80,9 @@ class TeamController extends Controller
 
         // Ensure min <= max
         if ($validated['policy_min_expiry_days'] > $validated['policy_max_expiry_days']) {
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'error' => 'Minimum expiry cannot exceed maximum expiry.'], 422);
+            }
             return back()->withErrors(['policy_min_expiry_days' => 'Minimum expiry cannot exceed maximum expiry.']);
         }
 
@@ -101,6 +104,10 @@ class TeamController extends Controller
             TeamAuditLog::log($team, 'settings_updated', Auth::user(), [
                 'changes' => $changes,
             ]);
+        }
+
+        if ($request->ajax()) {
+            return response()->json(['success' => true]);
         }
 
         return redirect()->route('teams.settings', $team)

@@ -28,11 +28,10 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Last name</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Last name <span class="text-gray-400 dark:text-gray-500 font-normal">(optional)</span></label>
                     <input
                         type="text"
                         name="last_name"
-                        required
                         value="{{ old('last_name') }}"
                         class="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-gray-100/10 focus:border-gray-400 dark:focus:border-gray-500 text-gray-900 dark:text-white transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                         placeholder="Doe"

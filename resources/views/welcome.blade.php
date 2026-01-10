@@ -16,15 +16,24 @@
         </div>
 
         @if(session('success'))
-            <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl">
-                <p class="text-sm text-green-600 dark:text-green-400">{{ session('success') }}</p>
+            <div class="mb-6 p-4 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl">
+                <p class="text-sm text-gray-600 dark:text-gray-400">{{ session('success') }}</p>
             </div>
         @endif
 
         <!-- Form Card -->
+        @php
+            $isPro = $team || $isIndividual;
+            $requirePassword = $team ? $team->policy_require_password : ($user?->default_require_password ?? false);
+            $minExpiry = $team ? $team->policy_min_expiry_days : ($user?->default_min_expiry_days ?? 1);
+            $maxExpiry = $team ? $team->policy_max_expiry_days : ($user?->default_max_expiry_days ?? 30);
+            $maxViews = $team ? $team->policy_max_view_limit : ($user?->default_max_view_limit ?? 10);
+        @endphp
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 sm:p-8 transition-colors duration-200 relative">
             @if($team)
                 <span class="absolute top-4 right-4 px-2 py-1 text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 rounded-full">Team Mode</span>
+            @elseif($isIndividual)
+                <span class="absolute top-4 right-4 px-2 py-1 text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 rounded-full">Pro</span>
             @endif
 
             <form id="note-form" method="post" action="/create-note" class="space-y-6">
@@ -60,16 +69,16 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Password protection
-                            @if($team && $team->policy_require_password)
+                            @if($requirePassword)
                                 <span class="text-red-500">*</span>
                             @endif
                         </label>
                         <input
                             type="text"
                             name="password"
-                            @if($team && $team->policy_require_password) required @endif
+                            @if($requirePassword) required @endif
                             class="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-gray-100/10 focus:border-gray-400 dark:focus:border-gray-500 text-gray-900 dark:text-white transition-all duration-200 placeholder:text-gray-400 dark:placeholder:text-gray-500"
-                            placeholder="{{ $team && $team->policy_require_password ? 'Required password' : 'Optional password' }}"
+                            placeholder="{{ $requirePassword ? 'Required password' : 'Optional password' }}"
                         >
                     </div>
 
@@ -78,25 +87,25 @@
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Days till expiry</label>
                             <input
                                 type="number"
-                                min="{{ $team ? $team->policy_min_expiry_days : 1 }}"
-                                max="{{ $team ? $team->policy_max_expiry_days : 30 }}"
+                                min="{{ $minExpiry }}"
+                                max="{{ $maxExpiry }}"
                                 name="expiry"
-                                value="{{ $team ? min(7, $team->policy_max_expiry_days) : 7 }}"
+                                value="{{ min(7, $maxExpiry) }}"
                                 class="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-gray-100/10 focus:border-gray-400 dark:focus:border-gray-500 text-gray-900 dark:text-white transition-all duration-200"
                             >
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Allowed views
-                                @unless($team)
+                                @unless($isPro)
                                     <a href="/pro" class="text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 font-normal ml-1">Pro</a>
                                 @endunless
                             </label>
-                            @if($team)
+                            @if($isPro)
                                 <input
                                     type="number"
                                     min="1"
-                                    max="{{ $team->policy_max_view_limit }}"
+                                    max="{{ $maxViews }}"
                                     name="max_views"
                                     value="1"
                                     class="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-gray-100/10 focus:border-gray-400 dark:focus:border-gray-500 text-gray-900 dark:text-white transition-all duration-200"
@@ -113,11 +122,11 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Read receipts
-                            @unless($team)
+                            @unless($isPro)
                                 <a href="/pro" class="text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 font-normal ml-1">Pro</a>
                             @endunless
                         </label>
-                        @if($team)
+                        @if($isPro)
                             <input
                                 type="email"
                                 name="notify_email"
@@ -224,6 +233,10 @@
 
                 // Replace plaintext with encrypted content
                 noteInput.value = encrypted;
+
+                // Brief delay to show encryption happened
+                btn.textContent = 'Encrypted!';
+                await new Promise(resolve => setTimeout(resolve, 1000));
 
                 // Submit the form
                 this.submit();
