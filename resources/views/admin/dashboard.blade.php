@@ -7,17 +7,21 @@
         </div>
 
         <!-- Stats Cards -->
-        <div class="grid grid-cols-3 gap-6 mb-8">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-8">
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 transition-colors duration-200">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Total Accounts</p>
                 <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ number_format($totalAccounts) }}</p>
             </div>
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 transition-colors duration-200">
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Total Teams</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Teams</p>
                 <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ number_format($totalTeams) }}</p>
             </div>
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 transition-colors duration-200">
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Total Notes Sent</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Personal Accounts</p>
+                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ number_format($personalAccounts) }}</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 transition-colors duration-200">
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Notes Sent</p>
                 <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ number_format($totalNotes) }}</p>
             </div>
         </div>

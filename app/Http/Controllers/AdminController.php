@@ -22,6 +22,7 @@ class AdminController extends Controller
         // Stats
         $totalAccounts = User::count();
         $totalTeams = Team::count();
+        $personalAccounts = User::where('individual_mode', true)->count();
         $totalNotes = Receipt::count();
 
         // Get note counts per team from receipts
@@ -39,6 +40,6 @@ class AdminController extends Controller
                 return $team;
             });
 
-        return view('admin.dashboard', compact('totalAccounts', 'totalTeams', 'totalNotes', 'teams'));
+        return view('admin.dashboard', compact('totalAccounts', 'totalTeams', 'personalAccounts', 'totalNotes', 'teams'));
     }
 }
