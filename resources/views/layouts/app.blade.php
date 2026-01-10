@@ -30,7 +30,7 @@
     <meta property="og:url" content="https://burnernote.com/">
     <meta property="og:title" content="Burner Note - Self-Destructing Encrypted Notes">
     <meta property="og:description" content="Send private notes that automatically delete after reading. End-to-end AES-256 encryption. Zero-knowledge architecture. Free and open source.">
-    <meta property="og:image" content="https://burnernote.com/img/meta.png">
+    <meta property="og:image" content="https://burnernote.com/img/meta2.png">
     <meta property="og:site_name" content="Burner Note">
     <meta property="og:locale" content="en_US">
 
@@ -39,7 +39,7 @@
     <meta name="twitter:url" content="https://burnernote.com/">
     <meta name="twitter:title" content="Burner Note - Self-Destructing Encrypted Notes">
     <meta name="twitter:description" content="Send private notes that automatically delete after reading. End-to-end AES-256 encryption. Zero-knowledge architecture. Free and open source.">
-    <meta name="twitter:image" content="https://burnernote.com/img/meta.png">
+    <meta name="twitter:image" content="https://burnernote.com/img/meta2.png">
 
     <!-- Additional SEO -->
     <meta name="application-name" content="Burner Note">
