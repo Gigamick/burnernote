@@ -119,5 +119,18 @@
                 </p>
             </div>
         </div>
+
+        <!-- Divider -->
+        <div class="border-t border-gray-200 dark:border-gray-700 my-10"></div>
+
+        <!-- Created by Dept91 -->
+        <div class="bg-gray-100 dark:bg-gray-800 rounded-2xl p-6 sm:p-8">
+            <div class="flex flex-col items-center gap-4 text-center">
+                <p class="text-gray-600 dark:text-gray-400">Burner Note was created by</p>
+                <a href="https://dept91.com" target="_blank">
+                    <img src="/img/dept91-logo-3.png" alt="Dept91" class="h-8 dark:invert">
+                </a>
+            </div>
+        </div>
     </div>
 @endsection
