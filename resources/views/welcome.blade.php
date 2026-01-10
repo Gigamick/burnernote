@@ -22,18 +22,9 @@
         @endif
 
         <!-- Form Card -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 sm:p-8 transition-colors duration-200">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 sm:p-8 transition-colors duration-200 relative">
             @if($team)
-                <div class="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl">
-                    <p class="text-sm text-blue-600 dark:text-blue-400">
-                        Creating note for <strong>{{ $team->name }}</strong>
-                        @if($team->policy_require_password)
-                            &middot; Password required
-                        @endif
-                        &middot; Max {{ $team->policy_max_expiry_days }} days
-                        &middot; Max {{ $team->policy_max_view_limit }} views
-                    </p>
-                </div>
+                <span class="absolute top-4 right-4 px-2 py-1 text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 rounded-full">Team Mode</span>
             @endif
 
             <form id="note-form" method="post" action="/create-note" class="space-y-6">
