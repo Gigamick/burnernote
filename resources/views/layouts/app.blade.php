@@ -22,13 +22,15 @@
     <meta name="author" content="Burner Note">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://burnernote.com/">
+    <link rel="icon" type="image/png" href="/img/bn.png">
+    <link rel="apple-touch-icon" href="/img/bn.png">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://burnernote.com/">
     <meta property="og:title" content="Burner Note - Self-Destructing Encrypted Notes">
     <meta property="og:description" content="Send private notes that automatically delete after reading. End-to-end AES-256 encryption. Zero-knowledge architecture. Free and open source.">
-    <meta property="og:image" content="https://burnernote.com/img/burnernote.png">
+    <meta property="og:image" content="https://burnernote.com/img/meta.png">
     <meta property="og:site_name" content="Burner Note">
     <meta property="og:locale" content="en_US">
 
@@ -37,7 +39,7 @@
     <meta name="twitter:url" content="https://burnernote.com/">
     <meta name="twitter:title" content="Burner Note - Self-Destructing Encrypted Notes">
     <meta name="twitter:description" content="Send private notes that automatically delete after reading. End-to-end AES-256 encryption. Zero-knowledge architecture. Free and open source.">
-    <meta name="twitter:image" content="https://burnernote.com/img/burnernote.png">
+    <meta name="twitter:image" content="https://burnernote.com/img/meta.png">
 
     <!-- Additional SEO -->
     <meta name="application-name" content="Burner Note">
@@ -84,7 +86,7 @@
             <div class="max-w-4xl mx-auto px-4 sm:px-6">
                 <div class="flex justify-between items-center h-16">
                     <!-- Logo -->
-                    <a href="{{ url('/') }}" class="text-xl font-bold text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
+                    <a href="{{ url('/') }}" class="text-xl font-black text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
                         Burner Note
                     </a>
 
