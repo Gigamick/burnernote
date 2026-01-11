@@ -20,6 +20,31 @@
                 <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">The decryption key may be missing or invalid.</p>
             </div>
             <p id="note-content" class="text-gray-900 dark:text-white whitespace-pre-wrap leading-relaxed hidden"></p>
+
+            @if(count($attachments) > 0)
+                <div id="attachments-section" class="mt-6 pt-6 border-t border-gray-100 dark:border-gray-700 hidden">
+                    <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Attachments</h3>
+                    <div id="attachments-list" class="space-y-2">
+                        @foreach($attachments as $attachment)
+                            <div class="flex items-center justify-between px-3 py-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg"
+                                 data-attachment-id="{{ $attachment['id'] }}"
+                                 data-encrypted-filename="{{ $attachment['encrypted_filename'] }}"
+                                 data-encrypted-content="{{ $attachment['content'] }}"
+                                 data-size="{{ $attachment['size'] }}">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
+                                    </svg>
+                                    <span class="attachment-filename text-sm text-gray-500 dark:text-gray-400">Decrypting...</span>
+                                </div>
+                                <button class="download-btn hidden text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+                                    Download
+                                </button>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         </div>
 
         <div class="text-center mt-6">
@@ -64,6 +89,75 @@
             return decoder.decode(decrypted);
         }
 
+        async function decryptFile(encryptedBlob, key) {
+            const combined = new Uint8Array(encryptedBlob);
+            const iv = combined.slice(0, 12);
+            const data = combined.slice(12);
+
+            const decrypted = await window.crypto.subtle.decrypt(
+                { name: 'AES-GCM', iv },
+                key,
+                data
+            );
+
+            return new Uint8Array(decrypted);
+        }
+
+        async function decryptAttachments(key) {
+            const attachments = document.querySelectorAll('[data-attachment-id]');
+            if (attachments.length === 0) return;
+
+            document.getElementById('attachments-section')?.classList.remove('hidden');
+
+            for (const el of attachments) {
+                const encryptedFilename = el.dataset.encryptedFilename;
+                const encryptedContent = el.dataset.encryptedContent;
+
+                try {
+                    const filename = await decrypt(encryptedFilename, key);
+                    el.querySelector('.attachment-filename').textContent = filename;
+                    el.dataset.filename = filename;
+
+                    const btn = el.querySelector('.download-btn');
+                    btn.classList.remove('hidden');
+                    btn.onclick = () => downloadAttachment(encryptedContent, filename, key);
+                } catch (e) {
+                    el.querySelector('.attachment-filename').textContent = 'Unable to decrypt filename';
+                }
+            }
+        }
+
+        async function downloadAttachment(base64Content, filename, key) {
+            const btn = event.target;
+            btn.textContent = 'Decrypting...';
+            btn.disabled = true;
+
+            try {
+                // Decode base64 to get encrypted bytes
+                const encryptedBytes = Uint8Array.from(atob(base64Content), c => c.charCodeAt(0));
+                const decrypted = await decryptFile(encryptedBytes.buffer, key);
+
+                const blob = new Blob([decrypted]);
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(a.href);
+
+                btn.textContent = 'Download';
+                btn.disabled = false;
+            } catch (e) {
+                console.error('Download failed:', e);
+                btn.textContent = 'Failed';
+                setTimeout(() => {
+                    btn.textContent = 'Download';
+                    btn.disabled = false;
+                }, 2000);
+            }
+        }
+
+        let decryptionKey = null;
+
         async function decryptNote() {
             const loading = document.getElementById('loading');
             const error = document.getElementById('error');
@@ -83,11 +177,15 @@
 
             try {
                 const key = await importKey(keyBase64);
+                decryptionKey = key;
                 const plaintext = await decrypt(encryptedNote, key);
 
                 loading.classList.add('hidden');
                 content.textContent = plaintext;
                 content.classList.remove('hidden');
+
+                // Decrypt attachment filenames
+                await decryptAttachments(key);
 
                 // Clear the key from storage
                 sessionStorage.removeItem('burnernote_key');

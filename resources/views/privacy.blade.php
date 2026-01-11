@@ -58,6 +58,7 @@
                         <p><strong>What we store:</strong></p>
                         <ul class="list-disc list-inside space-y-1 ml-2">
                             <li>Encrypted ciphertext (which we cannot decrypt &mdash; see <a href="/about" class="underline">About</a> for technical details)</li>
+                            <li>Encrypted file attachments (same client-side encryption, stored on Cloudflare R2)</li>
                             <li>A random token for URL generation</li>
                             <li>Expiry timestamp</li>
                             <li>View count (integer only)</li>
@@ -207,6 +208,10 @@
                             <tr>
                                 <td class="py-2 pr-4">Anonymous note ciphertext</td>
                                 <td class="py-2">Until viewed (max views) or expiry date, whichever comes first</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 pr-4">File attachments</td>
+                                <td class="py-2">Deleted when parent note is deleted (encrypted, stored on Cloudflare R2)</td>
                             </tr>
                             <tr>
                                 <td class="py-2 pr-4">Team note ciphertext</td>

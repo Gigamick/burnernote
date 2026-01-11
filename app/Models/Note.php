@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Note extends Model
 {
@@ -81,5 +82,19 @@ class Note extends Model
         if (!$this->read_at) {
             $this->update(['read_at' => now()]);
         }
+    }
+
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(NoteAttachment::class);
+    }
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Note $note) {
+            foreach ($note->attachments as $attachment) {
+                $attachment->deleteFromStorage();
+            }
+        });
     }
 }

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -53,6 +54,19 @@ class NoteController extends Controller
             'expiry_date' => $expiryDate,
         ]);
 
+        // Associate temp attachments with note
+        $tempAttachments = session('temp_attachments', []);
+        $requestedIds = $request->input('attachment_ids', []);
+
+        foreach ($requestedIds as $tempId) {
+            if (isset($tempAttachments[$tempId])) {
+                $note->attachments()->create($tempAttachments[$tempId]);
+            }
+        }
+
+        // Clear temp attachments from session
+        session()->forget('temp_attachments');
+
         // Log to team audit if team note
         if ($team) {
             TeamAuditLog::log($team, 'note_created', Auth::user(), [
@@ -61,6 +75,7 @@ class NoteController extends Controller
                 'max_views' => $note->max_views,
                 'has_password' => !empty($validated['password']),
                 'recipient_email' => $validated['notify_email'] ?? null,
+                'attachment_count' => count($requestedIds),
             ]);
         }
 
@@ -163,6 +178,17 @@ class NoteController extends Controller
         $remainingViews = $note->remainingViews();
         $clientEncrypted = $note->client_encrypted;
 
+        // Pre-load attachment content from R2 before deletion
+        // This allows downloads to work even after the note is deleted
+        $attachmentData = $note->attachments->map(function ($attachment) {
+            return [
+                'id' => $attachment->id,
+                'encrypted_filename' => $attachment->encrypted_filename,
+                'content' => base64_encode(Storage::disk('r2')->get($attachment->storage_path)),
+                'size' => $attachment->size,
+            ];
+        });
+
         // Delete note if max views reached
         if ($note->shouldBeDeleted()) {
             $this->markReceiptViewed($note);
@@ -175,6 +201,7 @@ class NoteController extends Controller
             return view('note-encrypted', [
                 'encryptedNote' => $decrypted,
                 'remainingViews' => $remainingViews,
+                'attachments' => $attachmentData,
             ]);
         }
 

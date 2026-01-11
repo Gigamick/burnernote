@@ -139,6 +139,32 @@
                             </div>
                         @endif
                     </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            File attachments
+                            @if($isPro)
+                                <span class="text-xs text-gray-400 dark:text-gray-500 font-normal ml-1">(max 5 files, 25MB each)</span>
+                            @else
+                                <a href="/pro" class="text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 font-normal ml-1">Pro</a>
+                            @endif
+                        </label>
+                        @if($isPro)
+                            <input type="file" id="file-input" multiple class="hidden">
+                            <div id="file-list" class="space-y-2 mb-2"></div>
+                            <button
+                                type="button"
+                                id="add-files-btn"
+                                class="w-full px-4 py-3 border-2 border-dashed border-gray-200 dark:border-gray-600 rounded-xl text-gray-400 dark:text-gray-500 hover:border-gray-300 dark:hover:border-gray-500 hover:text-gray-500 dark:hover:text-gray-400 transition-all duration-200"
+                            >
+                                + Add files
+                            </button>
+                        @else
+                            <div class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-400 dark:text-gray-500">
+                                Attach encrypted files to your note
+                            </div>
+                        @endif
+                    </div>
                     </div>
                 </div>
 
@@ -165,6 +191,10 @@
     </div>
 
     <script type="module">
+        const MAX_FILES = 5;
+        const MAX_SIZE = 25 * 1024 * 1024; // 25MB
+        const files = [];
+
         async function generateKey() {
             return await window.crypto.subtle.generateKey(
                 { name: 'AES-GCM', length: 256 },
@@ -194,6 +224,128 @@
             combined.set(new Uint8Array(encrypted), iv.length);
 
             return btoa(String.fromCharCode(...combined));
+        }
+
+        async function encryptFile(file, key) {
+            const arrayBuffer = await file.arrayBuffer();
+            const data = new Uint8Array(arrayBuffer);
+            const iv = window.crypto.getRandomValues(new Uint8Array(12));
+
+            const encrypted = await window.crypto.subtle.encrypt(
+                { name: 'AES-GCM', iv },
+                key,
+                data
+            );
+
+            const combined = new Uint8Array(iv.length + encrypted.byteLength);
+            combined.set(iv);
+            combined.set(new Uint8Array(encrypted), iv.length);
+
+            const encryptedFilename = await encrypt(file.name, key);
+
+            return {
+                blob: combined,
+                encryptedFilename,
+                mimeType: file.type,
+                size: file.size,
+            };
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        function renderFileList() {
+            const list = document.getElementById('file-list');
+            const addBtn = document.getElementById('add-files-btn');
+            if (!list || !addBtn) return;
+
+            list.innerHTML = files.map((file, index) => `
+                <div class="flex items-center justify-between px-3 py-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
+                        </svg>
+                        <span class="text-sm text-gray-700 dark:text-gray-300 truncate">${file.name}</span>
+                        <span class="text-xs text-gray-400 dark:text-gray-500 flex-shrink-0">${formatFileSize(file.size)}</span>
+                    </div>
+                    <button type="button" onclick="removeFile(${index})" class="text-gray-400 hover:text-red-500 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            `).join('');
+
+            addBtn.style.display = files.length >= MAX_FILES ? 'none' : 'block';
+        }
+
+        window.removeFile = function(index) {
+            files.splice(index, 1);
+            renderFileList();
+        };
+
+        // File attachment handlers (Pro only)
+        const addFilesBtn = document.getElementById('add-files-btn');
+        const fileInput = document.getElementById('file-input');
+
+        if (addFilesBtn && fileInput) {
+            addFilesBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', function(e) {
+                for (const file of e.target.files) {
+                    if (files.length >= MAX_FILES) {
+                        alert('Maximum 5 files allowed');
+                        break;
+                    }
+                    if (file.size > MAX_SIZE) {
+                        alert(`${file.name} exceeds 25MB limit`);
+                        continue;
+                    }
+                    files.push(file);
+                }
+                renderFileList();
+                e.target.value = '';
+            });
+        }
+
+        async function uploadEncryptedFiles(key) {
+            const attachmentIds = [];
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const tempId = crypto.randomUUID();
+
+                document.getElementById('submit-btn').textContent = `Encrypting file ${i + 1}/${files.length}...`;
+
+                const encrypted = await encryptFile(file, key);
+
+                const response = await fetch('/api/attachments/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                    body: JSON.stringify({
+                        file: btoa(String.fromCharCode(...encrypted.blob)),
+                        encrypted_filename: encrypted.encryptedFilename,
+                        mime_type: encrypted.mimeType,
+                        size: encrypted.size,
+                        temp_id: tempId,
+                    }),
+                });
+
+                if (response.ok) {
+                    attachmentIds.push(tempId);
+                }
+            }
+
+            return attachmentIds;
         }
 
         // Advanced options toggle
@@ -233,6 +385,21 @@
 
                 // Replace plaintext with encrypted content
                 noteInput.value = encrypted;
+
+                // Upload encrypted files if any
+                let attachmentIds = [];
+                if (files.length > 0) {
+                    attachmentIds = await uploadEncryptedFiles(key);
+                }
+
+                // Add attachment IDs to form
+                attachmentIds.forEach(id => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'attachment_ids[]';
+                    input.value = id;
+                    this.appendChild(input);
+                });
 
                 // Brief delay to show encryption happened
                 btn.textContent = 'Encrypted!';

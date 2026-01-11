@@ -26,6 +26,20 @@
                 </p>
             </div>
 
+            <!-- Encrypted File Attachments -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 sm:p-8 transition-colors duration-200">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Encrypted File Attachments</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-4">
+                    Attach files to your notes with the same zero-knowledge encryption. Send documents, images, or any file type securely.
+                </p>
+                <ul class="space-y-2 text-sm text-gray-500 dark:text-gray-400">
+                    <li>Up to 5 files per note, 25MB each</li>
+                    <li>Client-side encryption before upload</li>
+                    <li>Files deleted when note burns</li>
+                    <li>Filenames encrypted too</li>
+                </ul>
+            </div>
+
             <!-- Burn Box -->
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 sm:p-8 transition-colors duration-200">
                 <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Burn Box</h2>

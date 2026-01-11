@@ -61,3 +61,49 @@ export async function decrypt(ciphertext, key) {
     const decoder = new TextDecoder();
     return decoder.decode(decrypted);
 }
+
+/**
+ * Encrypt a file (returns encrypted blob + encrypted filename)
+ */
+export async function encryptFile(file, key) {
+    const arrayBuffer = await file.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+    const iv = window.crypto.getRandomValues(new Uint8Array(12));
+
+    const encrypted = await window.crypto.subtle.encrypt(
+        { name: 'AES-GCM', iv },
+        key,
+        data
+    );
+
+    const combined = new Uint8Array(iv.length + encrypted.byteLength);
+    combined.set(iv);
+    combined.set(new Uint8Array(encrypted), iv.length);
+
+    // Also encrypt the filename
+    const encryptedFilename = await encrypt(file.name, key);
+
+    return {
+        blob: combined,
+        encryptedFilename,
+        mimeType: file.type,
+        size: file.size,
+    };
+}
+
+/**
+ * Decrypt a file blob
+ */
+export async function decryptFile(encryptedBlob, key) {
+    const combined = new Uint8Array(encryptedBlob);
+    const iv = combined.slice(0, 12);
+    const data = combined.slice(12);
+
+    const decrypted = await window.crypto.subtle.decrypt(
+        { name: 'AES-GCM', iv },
+        key,
+        data
+    );
+
+    return new Uint8Array(decrypted);
+}

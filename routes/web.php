@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\Auth\MagicLinkController;
 use App\Http\Controllers\BurnMeController;
 use App\Http\Controllers\ContactController;
@@ -96,6 +97,10 @@ Route::post('/create-note', [NoteController::class, 'create']);
 Route::post('/submit-password', [NoteController::class, 'password']);
 Route::get('/n/{token}', [NoteController::class, 'show']);
 Route::get('/v/{token}', [NoteController::class, 'verify']);
+
+// Attachment routes
+Route::post('/api/attachments/upload', [AttachmentController::class, 'upload'])->middleware('throttle:20,1');
+Route::get('/attachments/{attachment}/download', [AttachmentController::class, 'download'])->name('attachments.download');
 
 Route::view('/about', 'about');
 Route::view('/pro', 'pro');
