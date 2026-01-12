@@ -195,6 +195,17 @@
         const MAX_SIZE = 25 * 1024 * 1024; // 25MB
         const files = [];
 
+        // Convert Uint8Array to base64 without stack overflow on large files
+        function arrayToBase64(bytes) {
+            let binary = '';
+            const chunkSize = 32768; // Process in 32KB chunks
+            for (let i = 0; i < bytes.length; i += chunkSize) {
+                const chunk = bytes.subarray(i, Math.min(i + chunkSize, bytes.length));
+                binary += String.fromCharCode.apply(null, chunk);
+            }
+            return btoa(binary);
+        }
+
         async function generateKey() {
             return await window.crypto.subtle.generateKey(
                 { name: 'AES-GCM', length: 256 },
@@ -316,14 +327,20 @@
         async function uploadEncryptedFiles(key) {
             const attachmentIds = [];
             const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+            const btn = document.getElementById('submit-btn');
+            const total = files.length;
 
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
                 const tempId = crypto.randomUUID();
+                const shortName = file.name.length > 20 ? file.name.substring(0, 17) + '...' : file.name;
+                const progress = total > 1 ? ` (${i + 1}/${total})` : '';
 
-                document.getElementById('submit-btn').textContent = `Encrypting file ${i + 1}/${files.length}...`;
+                btn.textContent = `Encrypting ${shortName}${progress}`;
 
                 const encrypted = await encryptFile(file, key);
+
+                btn.textContent = `Uploading ${shortName}${progress}`;
 
                 const response = await fetch('/api/attachments/upload', {
                     method: 'POST',
@@ -332,7 +349,7 @@
                         'X-CSRF-TOKEN': csrfToken,
                     },
                     body: JSON.stringify({
-                        file: btoa(String.fromCharCode(...encrypted.blob)),
+                        file: arrayToBase64(encrypted.blob),
                         encrypted_filename: encrypted.encryptedFilename,
                         mime_type: encrypted.mimeType,
                         size: encrypted.size,
@@ -342,6 +359,8 @@
 
                 if (response.ok) {
                     attachmentIds.push(tempId);
+                } else {
+                    console.error(`Failed to upload ${file.name}`);
                 }
             }
 

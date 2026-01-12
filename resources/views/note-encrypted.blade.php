@@ -29,7 +29,7 @@
                             <div class="flex items-center justify-between px-3 py-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg"
                                  data-attachment-id="{{ $attachment['id'] }}"
                                  data-encrypted-filename="{{ $attachment['encrypted_filename'] }}"
-                                 data-encrypted-content="{{ $attachment['content'] }}"
+                                 data-download-url="{{ $attachment['download_url'] }}"
                                  data-size="{{ $attachment['size'] }}">
                                 <div class="flex items-center gap-2 min-w-0">
                                     <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -43,6 +43,7 @@
                             </div>
                         @endforeach
                     </div>
+                    <p class="text-xs text-gray-400 dark:text-gray-500 mt-3">Files will burn in 10 minutes</p>
                 </div>
             @endif
         </div>
@@ -111,7 +112,7 @@
 
             for (const el of attachments) {
                 const encryptedFilename = el.dataset.encryptedFilename;
-                const encryptedContent = el.dataset.encryptedContent;
+                const downloadUrl = el.dataset.downloadUrl;
 
                 try {
                     const filename = await decrypt(encryptedFilename, key);
@@ -120,22 +121,29 @@
 
                     const btn = el.querySelector('.download-btn');
                     btn.classList.remove('hidden');
-                    btn.onclick = () => downloadAttachment(encryptedContent, filename, key);
+                    btn.onclick = () => downloadAttachment(downloadUrl, filename, key);
                 } catch (e) {
                     el.querySelector('.attachment-filename').textContent = 'Unable to decrypt filename';
                 }
             }
         }
 
-        async function downloadAttachment(base64Content, filename, key) {
+        async function downloadAttachment(downloadUrl, filename, key) {
             const btn = event.target;
-            btn.textContent = 'Decrypting...';
+            btn.textContent = 'Downloading...';
             btn.disabled = true;
 
             try {
-                // Decode base64 to get encrypted bytes
-                const encryptedBytes = Uint8Array.from(atob(base64Content), c => c.charCodeAt(0));
-                const decrypted = await decryptFile(encryptedBytes.buffer, key);
+                // Fetch encrypted content from server
+                const response = await fetch(downloadUrl);
+                if (!response.ok) {
+                    throw new Error(response.status === 404 ? 'Attachment expired' : 'Download failed');
+                }
+
+                const encryptedBlob = await response.arrayBuffer();
+                btn.textContent = 'Decrypting...';
+
+                const decrypted = await decryptFile(encryptedBlob, key);
 
                 const blob = new Blob([decrypted]);
                 const a = document.createElement('a');
@@ -148,7 +156,7 @@
                 btn.disabled = false;
             } catch (e) {
                 console.error('Download failed:', e);
-                btn.textContent = 'Failed';
+                btn.textContent = e.message === 'Attachment expired' ? 'Expired' : 'Failed';
                 setTimeout(() => {
                     btn.textContent = 'Download';
                     btn.disabled = false;

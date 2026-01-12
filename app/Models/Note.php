@@ -92,8 +92,10 @@ class Note extends Model
     protected static function booted(): void
     {
         static::deleting(function (Note $note) {
+            // Soft-delete attachments: mark for deletion in 10 minutes
+            // This allows users time to download after the note burns
             foreach ($note->attachments as $attachment) {
-                $attachment->deleteFromStorage();
+                $attachment->markForDeletion(10);
             }
         });
     }

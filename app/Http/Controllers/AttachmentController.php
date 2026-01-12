@@ -48,6 +48,16 @@ class AttachmentController extends Controller
 
     public function download(NoteAttachment $attachment): Response
     {
+        // Check if attachment has expired
+        if ($attachment->isExpired()) {
+            abort(404, 'This attachment has expired');
+        }
+
+        // Check if file exists in R2
+        if (!Storage::disk('r2')->exists($attachment->storage_path)) {
+            abort(404, 'Attachment not found');
+        }
+
         // Get encrypted content from R2
         $content = Storage::disk('r2')->get($attachment->storage_path);
 

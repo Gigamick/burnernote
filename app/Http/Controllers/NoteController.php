@@ -178,13 +178,13 @@ class NoteController extends Controller
         $remainingViews = $note->remainingViews();
         $clientEncrypted = $note->client_encrypted;
 
-        // Pre-load attachment content from R2 before deletion
-        // This allows downloads to work even after the note is deleted
+        // Get attachment metadata (content will be fetched on-demand via download endpoint)
+        // Attachments are soft-deleted with 10-minute expiry when note burns
         $attachmentData = $note->attachments->map(function ($attachment) {
             return [
                 'id' => $attachment->id,
                 'encrypted_filename' => $attachment->encrypted_filename,
-                'content' => base64_encode(Storage::disk('r2')->get($attachment->storage_path)),
+                'download_url' => $attachment->getDownloadUrl(),
                 'size' => $attachment->size,
             ];
         });
