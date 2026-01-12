@@ -40,6 +40,21 @@ class AdminController extends Controller
                 return $team;
             });
 
-        return view('admin.dashboard', compact('totalAccounts', 'totalTeams', 'personalAccounts', 'totalNotes', 'teams'));
+        // Personal accounts with note counts
+        $personalAccountNoteCounts = Receipt::whereNotNull('user_id')
+            ->whereNull('team_id')
+            ->selectRaw('user_id, count(*) as count')
+            ->groupBy('user_id')
+            ->pluck('count', 'user_id');
+
+        $individualUsers = User::where('account_mode', 'individual')
+            ->orderByDesc('created_at')
+            ->get()
+            ->map(function ($user) use ($personalAccountNoteCounts) {
+                $user->notes_count = $personalAccountNoteCounts[$user->id] ?? 0;
+                return $user;
+            });
+
+        return view('admin.dashboard', compact('totalAccounts', 'totalTeams', 'personalAccounts', 'totalNotes', 'teams', 'individualUsers'));
     }
 }

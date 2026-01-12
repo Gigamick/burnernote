@@ -27,7 +27,7 @@
         </div>
 
         <!-- Teams Table -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden transition-colors duration-200">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden transition-colors duration-200 mb-8">
             <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Teams</h2>
             </div>
@@ -61,6 +61,49 @@
                             <tr>
                                 <td colspan="4" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
                                     No teams yet.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Personal Accounts Table -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden transition-colors duration-200">
+            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Personal Accounts</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50 dark:bg-gray-700/50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Notes Sent</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Created</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                        @forelse($individualUsers as $user)
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">{{ $user->email }}</p>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-sm text-gray-900 dark:text-white">{{ $user->name ?? '-' }}</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-sm text-gray-900 dark:text-white">{{ $user->notes_count }}</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-sm text-gray-500 dark:text-gray-400">{{ $user->created_at->format('M j, Y') }}</span>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                                    No personal accounts yet.
                                 </td>
                             </tr>
                         @endforelse
