@@ -174,5 +174,8 @@
             localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
         }
     </script>
+
+    <!-- Really Simple Feedback Widget -->
+    <script src="https://reallysimplefeedback.com/widget.js" data-site="3r5C0XZndMcVtdUUOa2be3Ho4UXvrKrW" defer></script>
 </body>
 </html>
