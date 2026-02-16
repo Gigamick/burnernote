@@ -17,6 +17,9 @@ class Kernel extends ConsoleKernel
     {
         // Purge expired notes daily at midnight
         $schedule->command('notes:purge-expired')->daily();
+
+        // Delete abandoned signups (no account_mode) after 24 hours
+        $schedule->command('users:purge-abandoned')->daily();
     }
 
     /**
