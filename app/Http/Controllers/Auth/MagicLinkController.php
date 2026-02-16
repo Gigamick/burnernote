@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -27,12 +28,30 @@ class MagicLinkController extends Controller
 
     public function sendMagicLink(Request $request): RedirectResponse
     {
-        $request->validate([
-            'email' => 'required|email',
+        $isRegistration = $request->boolean('register');
+
+        $rules = ['email' => 'required|email'];
+        if ($isRegistration) {
+            $rules['cf-turnstile-response'] = 'required';
+        }
+        $request->validate($rules, [
+            'cf-turnstile-response.required' => 'Please complete the security check.',
         ]);
 
+        // Verify Turnstile token with Cloudflare
+        if ($isRegistration) {
+            $response = Http::asForm()->post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
+                'secret' => config('services.turnstile.secret_key'),
+                'response' => $request->input('cf-turnstile-response'),
+                'remoteip' => $request->ip(),
+            ]);
+
+            if (!$response->json('success')) {
+                return back()->withErrors(['cf-turnstile-response' => 'Security check failed. Please try again.'])->withInput();
+            }
+        }
+
         $email = strtolower($request->email);
-        $isRegistration = $request->boolean('register');
 
         // Check if user exists
         $existingUser = User::where('email', $email)->first();
