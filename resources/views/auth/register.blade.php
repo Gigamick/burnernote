@@ -35,7 +35,7 @@
                 </div>
 
                 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-                <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}"></div>
+                <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}" data-size="flexible"></div>
                 @error('cf-turnstile-response')
                     <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                 @enderror

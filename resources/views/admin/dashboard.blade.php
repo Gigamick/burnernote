@@ -7,7 +7,7 @@
         </div>
 
         <!-- Stats Cards -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5 transition-colors duration-200">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Total Users</p>
                 <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($totalUsers) }}</p>
@@ -19,10 +19,6 @@
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5 transition-colors duration-200">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Team Members</p>
                 <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ number_format($teamMembers) }}</p>
-            </div>
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5 transition-colors duration-200">
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Free</p>
-                <p class="text-2xl font-bold text-gray-500 dark:text-gray-400">{{ number_format($freeAccounts) }}</p>
             </div>
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5 transition-colors duration-200">
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Teams</p>
@@ -55,11 +51,6 @@
                             class="px-3 py-1 rounded-full text-sm font-medium transition-colors">
                         Team Members
                     </button>
-                    <button @click="filter = 'free'"
-                            :class="filter === 'free' ? 'bg-gray-500 text-white' : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'"
-                            class="px-3 py-1 rounded-full text-sm font-medium transition-colors">
-                        Free
-                    </button>
                 </div>
             </div>
             <div class="overflow-x-auto">
@@ -77,11 +68,7 @@
                     <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                         @forelse($allUsers as $user)
                             @php
-                                $type = match($user->account_mode) {
-                                    'individual' => 'personal',
-                                    'team' => 'team',
-                                    default => 'free',
-                                };
+                                $type = $user->account_mode === 'individual' ? 'personal' : 'team';
                             @endphp
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
                                 data-type="{{ $type }}"
@@ -95,10 +82,8 @@
                                 <td class="px-6 py-4">
                                     @if($type === 'personal')
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Personal</span>
-                                    @elseif($type === 'team')
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">Team</span>
                                     @else
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Free</span>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">Team</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4">

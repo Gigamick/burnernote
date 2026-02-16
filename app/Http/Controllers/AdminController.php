@@ -19,11 +19,10 @@ class AdminController extends Controller
             abort(404);
         }
 
-        // Stats
-        $totalUsers = User::count();
+        // Stats (only completed accounts)
         $personalAccounts = User::where('account_mode', 'individual')->count();
         $teamMembers = User::where('account_mode', 'team')->count();
-        $freeAccounts = User::whereNull('account_mode')->count();
+        $totalUsers = $personalAccounts + $teamMembers;
         $totalTeams = Team::count();
         $totalNotes = Receipt::count();
 
@@ -48,7 +47,8 @@ class AdminController extends Controller
             ->groupBy('user_id')
             ->pluck('count', 'user_id');
 
-        $allUsers = User::orderByDesc('created_at')
+        $allUsers = User::whereNotNull('account_mode')
+            ->orderByDesc('created_at')
             ->get()
             ->map(function ($user) use ($userNoteCounts) {
                 $user->notes_count = $userNoteCounts[$user->id] ?? 0;
@@ -56,7 +56,7 @@ class AdminController extends Controller
             });
 
         return view('admin.dashboard', compact(
-            'totalUsers', 'personalAccounts', 'teamMembers', 'freeAccounts',
+            'totalUsers', 'personalAccounts', 'teamMembers',
             'totalTeams', 'totalNotes', 'teams', 'allUsers'
         ));
     }
