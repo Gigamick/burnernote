@@ -20,9 +20,11 @@ class AdminController extends Controller
         }
 
         // Stats
-        $totalAccounts = User::count();
-        $totalTeams = Team::count();
+        $totalUsers = User::count();
         $personalAccounts = User::where('account_mode', 'individual')->count();
+        $teamMembers = User::where('account_mode', 'team')->count();
+        $freeAccounts = User::whereNull('account_mode')->count();
+        $totalTeams = Team::count();
         $totalNotes = Receipt::count();
 
         // Get note counts per team from receipts
@@ -40,21 +42,22 @@ class AdminController extends Controller
                 return $team;
             });
 
-        // Personal accounts with note counts
-        $personalAccountNoteCounts = Receipt::whereNotNull('user_id')
-            ->whereNull('team_id')
+        // All users with note counts
+        $userNoteCounts = Receipt::whereNotNull('user_id')
             ->selectRaw('user_id, count(*) as count')
             ->groupBy('user_id')
             ->pluck('count', 'user_id');
 
-        $individualUsers = User::where('account_mode', 'individual')
-            ->orderByDesc('created_at')
+        $allUsers = User::orderByDesc('created_at')
             ->get()
-            ->map(function ($user) use ($personalAccountNoteCounts) {
-                $user->notes_count = $personalAccountNoteCounts[$user->id] ?? 0;
+            ->map(function ($user) use ($userNoteCounts) {
+                $user->notes_count = $userNoteCounts[$user->id] ?? 0;
                 return $user;
             });
 
-        return view('admin.dashboard', compact('totalAccounts', 'totalTeams', 'personalAccounts', 'totalNotes', 'teams', 'individualUsers'));
+        return view('admin.dashboard', compact(
+            'totalUsers', 'personalAccounts', 'teamMembers', 'freeAccounts',
+            'totalTeams', 'totalNotes', 'teams', 'allUsers'
+        ));
     }
 }
