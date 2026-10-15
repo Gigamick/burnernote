@@ -9,7 +9,10 @@
         }
     </script>
     <!-- 100% privacy-first analytics -->
-    <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+    {{-- Not on note links: the script sends location.href, which includes the #key= decryption key --}}
+    @unless(request()->is('n/*', 'v/*'))
+        <script defer crossorigin data-domain="burnernote.com" src="https://cdn.benmetrics.com/js/script.js"></script>
+    @endunless
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
